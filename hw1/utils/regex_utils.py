@@ -1,8 +1,9 @@
 from datetime import datetime
-from re import fullmatch
+from re import fullmatch, findall
 
-INPUT_FILE_NAME_PATTERN = 'judgments-\d+\.json'
-JUDGEMENT_DATE_FORMAT = '%Y-%m-%d'
+INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
+JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
+MONEY_PATTERN = r'(\d+(?:[ .,]*\d+)*(?= ?zł(?:ote|otych|(?!\w))))'
 
 
 def is_valid_input_file(filename: str) -> bool:
@@ -11,3 +12,7 @@ def is_valid_input_file(filename: str) -> bool:
 
 def judgement_year_matches(date: str, year: int) -> bool:
     return datetime.strptime(date, JUDGEMENT_DATE_FORMAT).year == year
+
+
+def find_money_in_string(judgement_content: str):
+    return findall(MONEY_PATTERN, judgement_content)

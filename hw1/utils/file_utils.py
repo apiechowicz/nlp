@@ -34,3 +34,7 @@ def extract_judgements_from_given_year_from_file(file: str, year: int) -> List[D
 
 def __get_judgement_date(judgement: Dict[str, str]) -> str:
     return judgement["judgmentDate"]
+
+
+def extract_judgement_content(judgement: Dict[str, str]):
+    return judgement["textContent"]
