@@ -3,9 +3,10 @@ from re import fullmatch, compile, IGNORECASE, findall
 
 INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
-MONEY_PATTERN = r'(\d+(?:[ .,]?\d+)*(?= ?(?:zł(?:ote|otych|(?!\w))|pln)))'
+MONEY_PATTERN = r'(\d+(?:[ .,]?\d+)*(?: ?tys\.)?(?= ?(?:zł(?:ote|otych|(?!\w))|pln)))'
 
-# todo add abbreviations like tys.
+
+# todo add mln abbreviation
 
 
 def is_valid_input_file(filename: str) -> bool:
