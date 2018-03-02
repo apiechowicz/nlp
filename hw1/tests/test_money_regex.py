@@ -9,16 +9,20 @@ from hw1.utils.regex_utils import find_money_in_string
 def generate_test_cases():
     amounts = ["1", "1 000", "1 000 000"]
     delimiters = [' ', '.', ',']
+    with_abbreviation = [True, False]
+    abbreviations = ['tys.']
     white_char_before_currency = [True, False]
     currency = ["zł", "złote", "złotych", "pln"]
     to_upper_case = [True, False]
-    combinations = product(amounts, delimiters, white_char_before_currency, currency, to_upper_case)
+    combinations = product(amounts, delimiters, with_abbreviation, abbreviations, white_char_before_currency, currency,
+                           to_upper_case)
     return [__convert_test_case(comb) for comb in combinations]
 
 
 def __convert_test_case(parameters):
-    amount, delimiter, white_char_before_currency, currency, to_upper_case = parameters
+    amount, delimiter, with_abbreviation, abbreviation, white_char_before_currency, currency, to_upper_case = parameters
     amount = amount.replace(' ', delimiter)
+    amount = amount + abbreviation if with_abbreviation else amount
     currency = currency.upper() if to_upper_case else currency.lower()
     currency = ' ' + currency if white_char_before_currency else currency
     return amount + currency
