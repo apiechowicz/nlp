@@ -3,7 +3,7 @@ from os import listdir
 from os.path import join, basename
 from typing import List, Dict
 
-from .regex_utils import is_valid_input_file, judgement_year_matches
+from hw1.utils.regex_utils import is_valid_input_file, judgement_year_matches
 
 
 def get_files_to_be_processed(input_dir: str) -> List[str]:

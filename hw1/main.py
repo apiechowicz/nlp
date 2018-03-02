@@ -1,7 +1,8 @@
-from utils.argument_parser import parse_input_dir_argument
-from utils.file_utils import get_files_to_be_processed, get_absolute_path, extract_judgements_from_given_year_from_file, \
+from hw1.utils.argument_parser import parse_input_dir_argument
+from hw1.utils.file_utils import get_files_to_be_processed, get_absolute_path, \
+    extract_judgements_from_given_year_from_file, \
     extract_judgement_content
-from utils.regex_utils import find_money_in_string
+from hw1.utils.regex_utils import find_money_in_string
 
 
 def main() -> None:
