@@ -10,7 +10,7 @@ def generate_test_cases():
     amounts = ["1", "1 000", "1 000 000"]
     delimiters = [' ', '.', ',']
     with_abbreviation = [True, False]
-    abbreviations = ['tys.']
+    abbreviations = ['tys.', 'mln']
     white_char_before_currency = [True, False]
     currency = ["zł", "złote", "złotych", "pln"]
     to_upper_case = [True, False]
