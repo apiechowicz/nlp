@@ -1,9 +1,14 @@
-from json import loads
-from os import listdir
-from os.path import join, basename
+from json import loads, load, dump
+from os import getcwd
+from os import listdir, makedirs
+from os.path import join, basename, isfile, isdir
 from typing import List, Dict
 
 from hw1.utils.regex_utils import is_valid_input_file, judgement_year_matches
+
+OUTPUT_DIRECTORY_NAME = r'out'
+OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
+MONEY_NUMBER_DATA_FILENAME = r'number-data.json'
 
 
 def get_files_to_be_processed(input_dir: str) -> List[str]:
@@ -38,3 +43,18 @@ def __get_judgement_date(judgement: Dict[str, str]) -> str:
 
 def extract_judgement_content(judgement: Dict[str, str]):
     return judgement["textContent"]
+
+
+def save_number_data(numbers: List[int]):
+    if not isdir(OUTPUT_DIRECTORY_PATH):
+        makedirs(OUTPUT_DIRECTORY_PATH)
+    with open(join(OUTPUT_DIRECTORY_PATH, MONEY_NUMBER_DATA_FILENAME), 'w+') as file:
+        dump(numbers, file)
+
+
+def load_number_data() -> List[int]:
+    data_file_path = join(OUTPUT_DIRECTORY_PATH, MONEY_NUMBER_DATA_FILENAME)
+    if isfile(data_file_path):
+        with open(data_file_path, 'r') as file:
+            return load(file)
+    return []
