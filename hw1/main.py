@@ -10,7 +10,7 @@ def main() -> None:
     input_dir, judgement_year = parse_input_dir_argument()
     numbers = get_number_data(input_dir, judgement_year)
     save_number_data(numbers)
-    create_histogram(numbers, "ex1")
+    create_histogram(numbers, "ex1", judgement_year)
 
 
 def get_number_data(input_dir, judgement_year):
@@ -34,10 +34,14 @@ def prepare_numbers_data(input_dir: str, judgement_year: int) -> List[int]:
     return numbers
 
 
-def create_histogram(numbers: List[int], filename: str):
-    pyplot.hist(numbers)
+def create_histogram(numbers: List[int], filename: str, year: int):
     output_file = get_absolute_path(OUTPUT_DIRECTORY_PATH, filename)
-    pyplot.savefig(output_file)
+    pyplot.hist(numbers)
+    pyplot.title('Number of occurrences of given money\namount across judgements from year {}'.format(str(year)))
+    pyplot.xlabel('Money amounts')
+    pyplot.ylabel('Number of occurrences')
+    pyplot.grid(True)
+    pyplot.savefig(output_file, dpi=150)
 
 
 if __name__ == '__main__':
