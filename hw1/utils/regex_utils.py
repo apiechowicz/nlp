@@ -4,6 +4,7 @@ from re import fullmatch, compile, IGNORECASE, findall
 INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
 MONEY_PATTERN = r'(?:[1-9]\d*|0(?=,))(?:[ .,]?\d+)*(?: ?(?:tys\.|mln))?(?= ?(?:zł(?:ote|otych|(?!\w))|pln))'
+DETRIMENT_PATTERN = r'(szk(?:od(?:ami|ach|a|y|zie|ę|ą|om|o)|ód))'
 
 
 def is_valid_input_file(filename: str) -> bool:
@@ -14,8 +15,8 @@ def judgement_year_matches(date: str, year: int) -> bool:
     return datetime.strptime(date, JUDGEMENT_DATE_FORMAT).year == year
 
 
-def find_money_in_string(judgement_content: str):
-    pattern = compile(MONEY_PATTERN, IGNORECASE)
+def find_pattern_in_string(pattern: str, judgement_content: str):
+    pattern = compile(pattern, IGNORECASE)
     return findall(pattern, judgement_content)
 
 

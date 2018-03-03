@@ -3,7 +3,7 @@ from unittest import TestCase, main
 
 from parameterized import parameterized
 
-from hw1.utils.regex_utils import find_money_in_string
+from hw1.utils.regex_utils import find_pattern_in_string, MONEY_PATTERN
 
 
 def generate_test_cases():
@@ -36,12 +36,12 @@ class MoneyRegexTest(TestCase):
         ("number with non Polish currency", "1000 usd")
     ])
     def test_should_not_find(self, name, input):
-        found = find_money_in_string(input)
+        found = find_pattern_in_string(MONEY_PATTERN, input)
         self.assertEqual(len(found), 0)
 
     @parameterized.expand(generate_test_cases())
     def test_should_find(self, input):
-        found = find_money_in_string(input)
+        found = find_pattern_in_string(MONEY_PATTERN, input)
         self.assertEqual(len(found), 1)
 
 

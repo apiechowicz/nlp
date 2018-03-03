@@ -45,10 +45,10 @@ def extract_judgement_content(judgement: Dict[str, str]):
     return judgement["textContent"]
 
 
-def save_number_data(numbers: List[int]):
+def save_number_data(numbers: List[int], filename: str):
     if not isdir(OUTPUT_DIRECTORY_PATH):
         makedirs(OUTPUT_DIRECTORY_PATH)
-    with open(join(OUTPUT_DIRECTORY_PATH, MONEY_NUMBER_DATA_FILENAME), 'w+') as file:
+    with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
         dump(numbers, file)
 
 
