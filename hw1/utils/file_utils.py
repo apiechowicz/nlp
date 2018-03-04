@@ -41,8 +41,8 @@ def __get_judgement_date(judgement: Dict[str, str]) -> str:
     return judgement["judgmentDate"]
 
 
-def extract_judgement_content(judgement: Dict[str, str]):
-    return judgement["textContent"]
+def extract_from_judgement(judgement: Dict[str, str], field_name: str):
+    return judgement[field_name]
 
 
 def save_number_data(numbers: List[int], filename: str):

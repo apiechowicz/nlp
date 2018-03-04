@@ -5,7 +5,8 @@ from tqdm import tqdm
 
 from hw1.utils.argument_parser import parse_input_dir_argument
 from hw1.utils.file_utils import *
-from hw1.utils.regex_utils import find_pattern_in_string, MONEY_PATTERN, convert_money_string_to_int, DETRIMENT_PATTERN
+from hw1.utils.regex_utils import find_pattern_in_string, MONEY_PATTERN, convert_money_string_to_int, DETRIMENT_PATTERN, \
+    LAW_NAME, ARTICLE_PATTERN
 
 
 def main() -> None:
@@ -14,6 +15,7 @@ def main() -> None:
     save_number_data(numbers, MONEY_NUMBER_DATA_FILENAME)
     exercise1(numbers, judgement_year)
     exercise2(numbers, judgement_year)
+    exercise3(input_dir, judgement_year)
     exercise4(input_dir, judgement_year)
 
 
@@ -31,7 +33,7 @@ def prepare_numbers_data(input_dir: str, judgement_year: int) -> List[int]:
         file = get_absolute_path(input_dir, filename)
         judgements_to_be_processed = extract_judgements_from_given_year_from_file(file, judgement_year)
         for judgement in judgements_to_be_processed:
-            content = extract_judgement_content(judgement)
+            content = extract_from_judgement(judgement, 'textContent')
             matches = find_pattern_in_string(MONEY_PATTERN, content)
             for match in matches:
                 numbers.append(convert_money_string_to_int(match))
@@ -69,6 +71,23 @@ def split_list_by_value(numbers: List[int], value: int) -> Tuple[List[int], List
     return upto, above
 
 
+def exercise3(input_dir: str, judgement_year: int):
+    # todo refactor
+    occurrences = 0
+    files_to_be_processed = get_files_to_be_processed(input_dir)
+    for filename in tqdm(files_to_be_processed):  # todo format tqdm progressbar
+        file = get_absolute_path(input_dir, filename)
+        judgements_to_be_processed = extract_judgements_from_given_year_from_file(file, judgement_year)
+        for judgement in judgements_to_be_processed:
+            regulations = extract_from_judgement(judgement, 'referencedRegulations')
+            for regulation in regulations:
+                if regulation['journalTitle'] == LAW_NAME and len(
+                        find_pattern_in_string(ARTICLE_PATTERN, regulation['text'])) > 0:
+                    occurrences += 1
+                    break
+    save_number_data([occurrences], 'exercise-3.json')
+
+
 def exercise4(input_dir: str, judgement_year: int):
     occurrences = count_words(input_dir, judgement_year)
     save_number_data([occurrences], 'exercise-4.json')
@@ -81,7 +100,7 @@ def count_words(input_dir: str, judgement_year: int) -> int:
         file = get_absolute_path(input_dir, filename)
         judgements_to_be_processed = extract_judgements_from_given_year_from_file(file, judgement_year)
         for judgement in judgements_to_be_processed:
-            content = extract_judgement_content(judgement)
+            content = extract_from_judgement(judgement, 'textContent')
             matches = find_pattern_in_string(DETRIMENT_PATTERN, content)
             occurrences += len(matches)
     return occurrences

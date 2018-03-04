@@ -5,7 +5,8 @@ INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
 MONEY_PATTERN = r'(?:[1-9]\d*|0(?=,))(?:[ .,]?\d+)*(?: ?(?:tys\.|mln))?(?= ?(?:zł(?:ote|otych|(?!\w))|pln))'
 DETRIMENT_PATTERN = r'(szk(?:od(?:ami|ach|a|y|zie|ę|ą|om|o)|ód))'
-
+LAW_NAME = r'Ustawa z dnia 23 kwietnia 1964 r. - Kodeks cywilny'
+ARTICLE_PATTERN = r'(art(?:\.|ykuł\w{0,3}|ykule) 445)'
 
 def is_valid_input_file(filename: str) -> bool:
     return fullmatch(INPUT_FILE_NAME_PATTERN, filename) is not None
