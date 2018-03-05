@@ -1,7 +1,7 @@
-from json import loads, load, dump
+from json import loads
 from os import getcwd
 from os import listdir, makedirs
-from os.path import join, basename, isfile, isdir
+from os.path import join, basename, isdir
 from typing import List, Dict
 
 from hw1.utils.regex_utils import is_valid_input_file, judgement_year_matches
@@ -45,16 +45,12 @@ def extract_from_judgement(judgement: Dict[str, str], field_name: str):
     return judgement[field_name]
 
 
-def save_number_data(numbers: List[int], filename: str):
+def create_output_dir():
     if not isdir(OUTPUT_DIRECTORY_PATH):
         makedirs(OUTPUT_DIRECTORY_PATH)
+
+
+def save_data(data: str, filename: str):
+    create_output_dir()
     with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
-        dump(numbers, file)
-
-
-def load_number_data() -> List[int]:
-    data_file_path = join(OUTPUT_DIRECTORY_PATH, MONEY_NUMBER_DATA_FILENAME)
-    if isfile(data_file_path):
-        with open(data_file_path, 'r') as file:
-            return load(file)
-    return []
+        file.write(data)
