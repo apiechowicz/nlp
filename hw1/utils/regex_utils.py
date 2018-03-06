@@ -3,7 +3,7 @@ from re import fullmatch, compile, IGNORECASE, findall, search
 
 INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
-MONEY_PATTERN = r'(?:[1-9]\d*|0(?=,))(?:[ .,]?\d+)*(?: ?(?:tys\.|mln))?(?= ?(?:zł(?:ote|otych|(?!\w))|pln))'
+MONEY_PATTERN = r'(?:[1-9]\d*|0(?=,))(?:[ .,]?\d+)*(?: ?(?:tys\.|mln|mld))?(?= ?(?:zł(?:ote|otych|(?!\w))|pln))'
 DETRIMENT_PATTERN = r'(szk(?:od(?:ami|ach|a|y|zie|ę|ą|om|o)|ód))'
 LAW_NAME = r'Ustawa z dnia 23 kwietnia 1964 r. - Kodeks cywilny'
 ARTICLE_PATTERN = r'(art(?:\.|ykuł\w{0,3}|ykule) 445)'
@@ -39,6 +39,7 @@ def __skip_grosze(number: str) -> str:
 def __replace_abbreviations(number: str) -> str:
     number = number.replace('tys.', 3 * '0')
     number = number.replace('mln', 6 * '0')
+    number = number.replace('mld', 9 * '0')
     return number
 
 
