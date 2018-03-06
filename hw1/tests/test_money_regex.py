@@ -7,10 +7,10 @@ from hw1.utils.regex_utils import find_pattern_in_string, MONEY_PATTERN
 
 
 def generate_test_cases():
-    amounts = ["1", "1 000", "1 000 000"]
+    amounts = ["1", "1 00", "1 000", "1 000 000"]
     delimiters = [' ', '.', ',']
     with_abbreviation = [True, False]
-    abbreviations = ['tys.', 'mln']
+    abbreviations = ['tys.', 'mln', 'mld']
     white_char_before_currency = [True, False]
     currency = ["zł", "złote", "złotych", "pln"]
     to_upper_case = [True, False]
