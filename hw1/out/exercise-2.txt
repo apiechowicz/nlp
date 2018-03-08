@@ -1,0 +1,1 @@
+There have been 19828 numbers up to 1000000 and 4232 above that amount in year 2010.
