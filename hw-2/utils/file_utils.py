@@ -55,7 +55,14 @@ def __judgement_year_matches(date: str, year: int) -> bool:
     return datetime.strptime(date, JUDGEMENT_DATE_FORMAT).year == year
 
 
-def __get_required_data(judgement):
+def __get_required_data(judgement: Dict):
     data = {"textContent": judgement["textContent"], "judgmentDate": judgement["judgmentDate"],
-            "caseNumber": judgement["courtCases"][0]["caseNumber"], "judges": judgement["judges"]}
+            "caseNumber": judgement["courtCases"][0]["caseNumber"], "judges": __extract_only_judges_names(judgement)}
     return dumps(data) + '\n'
+
+
+def __extract_only_judges_names(judgement: Dict) -> List[Dict[str, str]]:
+    result = []
+    for judge in judgement["judges"]:
+        result.append({"name": judge["name"]})
+    return result

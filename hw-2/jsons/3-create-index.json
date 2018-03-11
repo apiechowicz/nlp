@@ -19,12 +19,6 @@
           "properties": {
             "name": {
               "type": "text"
-            },
-            "function": {
-              "type": "text"
-            },
-            "specialRoles": {
-              "type": "text"
             }
           }
         }
