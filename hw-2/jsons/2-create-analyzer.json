@@ -1,0 +1,15 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_custom_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "morfologik_stem"
+          ]
+        }
+      }
+    }
+  }
+}
