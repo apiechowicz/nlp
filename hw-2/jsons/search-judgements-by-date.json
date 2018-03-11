@@ -1,0 +1,11 @@
+{
+  "query": {
+    "range": {
+      "judgmentDate": {
+        "gte": "first_day",
+        "lte": "last_day",
+        "format": "yyyy-MM-dd"
+      }
+    }
+  }
+}

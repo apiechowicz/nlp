@@ -11,10 +11,11 @@ JSONS_DIRECTORY = r'jsons'
 CREATE_INDEX_JSON = r'create-index-with-analyzer.json'
 INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
+SEARCH_JUDGEMENTS_BY_DAY = r'search-judgements-by-date.json'
 
 
-def get_create_index_json(working_dir: str) -> str:
-    return __read_json_file_to_string(join(working_dir, JSONS_DIRECTORY, CREATE_INDEX_JSON))
+def get_json_as_string(working_dir: str, file_name: str) -> str:
+    return __read_json_file_to_string(join(working_dir, JSONS_DIRECTORY, file_name))
 
 
 def __read_json_file_to_string(file_path: str) -> str:
