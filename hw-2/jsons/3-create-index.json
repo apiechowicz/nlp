@@ -1,0 +1,23 @@
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "judgements": {
+      "properties": {
+        "textContent": {
+          "type": "text"
+        },
+        "judgmentDate": {
+          "type": "date"
+        },
+        "caseNumber": {
+          "type": "keyword"
+        },
+        "judges": {
+          "type": "nested"
+        }
+      }
+    }
+  }
+}
