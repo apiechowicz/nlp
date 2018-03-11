@@ -1,6 +1,16 @@
 {
   "settings": {
-    "number_of_shards": 1
+    "analysis": {
+      "analyzer": {
+        "my_custom_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "morfologik_stem"
+          ]
+        }
+      }
+    }
   },
   "mappings": {
     "judgements": {
