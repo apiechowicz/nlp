@@ -57,5 +57,5 @@ def __judgement_year_matches(date: str, year: int) -> bool:
 
 def __get_required_data(judgement):
     data = {"textContent": judgement["textContent"], "judgmentDate": judgement["judgmentDate"],
-            "caseNumber": judgement["courtCases"][0]["caseNumber"]}
+            "caseNumber": judgement["courtCases"][0]["caseNumber"], "judges": judgement["judges"]}
     return dumps(data) + '\n'

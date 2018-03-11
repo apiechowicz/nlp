@@ -13,6 +13,20 @@
         },
         "caseNumber": {
           "type": "keyword"
+        },
+        "judges": {
+          "type": "nested",
+          "properties": {
+            "name": {
+              "type": "text"
+            },
+            "function": {
+              "type": "text"
+            },
+            "specialRoles": {
+              "type": "text"
+            }
+          }
         }
       }
     }
