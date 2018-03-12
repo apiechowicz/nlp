@@ -1,7 +1,7 @@
 from datetime import datetime
 from json import loads, dumps
-from os import listdir
-from os.path import join
+from os import listdir, getcwd, makedirs
+from os.path import join, isdir
 from re import fullmatch
 from typing import List, Dict
 
@@ -13,6 +13,8 @@ INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
 SEARCH_DETRIMENT_WORD = r'search-detriment-word.json'
 SEARCH_JUDGEMENTS_BY_DAY = r'search-judgements-by-date.json'
+OUTPUT_DIRECTORY_NAME = r'out'
+OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
 
 
 def get_json_as_string(working_dir: str, file_name: str) -> str:
@@ -62,3 +64,14 @@ def __extract_only_judges_names(judgement: Dict) -> List[Dict[str, str]]:
     for judge in judgement["judges"]:
         result.append({"name": judge["name"]})
     return result
+
+
+def create_output_dir():
+    if not isdir(OUTPUT_DIRECTORY_PATH):
+        makedirs(OUTPUT_DIRECTORY_PATH)
+
+
+def save_data(data: str, filename: str):
+    create_output_dir()
+    with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
+        file.write(data)

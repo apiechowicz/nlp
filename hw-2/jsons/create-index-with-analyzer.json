@@ -1,9 +1,9 @@
 {
   "settings": {
+    "number_of_shards": 1,
     "analysis": {
       "analyzer": {
-        "my_custom_analyzer": {
-          "type": "custom",
+        "default": {
           "tokenizer": "standard",
           "filter": [
             "morfologik_stem"
