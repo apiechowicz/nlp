@@ -13,6 +13,7 @@ INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
 SEARCH_DETRIMENT_WORD = r'search-detriment-word.json'
 SEARCH_JUDGEMENTS_BY_DAY = r'search-judgements-by-date.json'
+SEARCH_PHRASE = r'search-phrase.json'
 OUTPUT_DIRECTORY_NAME = r'out'
 OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
 

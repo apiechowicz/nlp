@@ -10,7 +10,8 @@ from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import get_json_as_string, CREATE_INDEX_JSON, SEARCH_JUDGEMENTS_BY_DAY, SEARCH_DETRIMENT_WORD, \
-    save_data, OUTPUT_DIRECTORY_PATH, create_output_dir, get_files_to_be_processed, extract_and_upload_data
+    save_data, OUTPUT_DIRECTORY_PATH, create_output_dir, get_files_to_be_processed, extract_and_upload_data, \
+    SEARCH_PHRASE
 
 HOST = r'http://localhost:9200'
 INDEX_URL = HOST + r'/nlp-hw2'
@@ -18,6 +19,7 @@ INDEX_DATA_URL = INDEX_URL + r'/judgements'
 COUNT_QUERY_URL = INDEX_DATA_URL + r'/_count'
 HEADERS = {'content-type': 'application/json'}
 DETRIMENT_WORD = r'szkoda'
+PHRASE = r'trwały uszczerbek na zdrowiu'
 
 
 def main():
@@ -28,6 +30,12 @@ def main():
         extract_and_upload_data(file, judgement_year, INDEX_DATA_URL, HEADERS)
     save_data('Word {} occurred {} times in judgements from year {}.'.format(DETRIMENT_WORD, count_detriment_words(),
                                                                              judgement_year), 'exercise-6.txt')
+    save_data(
+        'Given phrase has occurred {} times in judgements from year {}.'.format(find_phrase(PHRASE, 0), judgement_year),
+        'exercise-7.txt')
+    save_data(
+        'Given phrase has occurred {} times in judgements from year {}.'.format(find_phrase(PHRASE, 2), judgement_year),
+        'exercise-8.txt')
     create_bar_chart(prepare_bar_chart_data(judgement_year), 'exercise-10.png', judgement_year)
 
 
@@ -35,12 +43,6 @@ def create_index_with_analyzer() -> str:
     data = get_json_as_string(getcwd(), CREATE_INDEX_JSON)
     response = requests.put(url=INDEX_URL, headers=HEADERS, data=data)
     return response.content
-
-
-def count_detriment_words():
-    data = get_json_as_string(getcwd(), SEARCH_DETRIMENT_WORD).replace('detriment_word', DETRIMENT_WORD)
-    response = requests.post(url=COUNT_QUERY_URL, headers=HEADERS, data=data)
-    return __get_count_from_response(response)
 
 
 def __get_count_from_response(response) -> int:
@@ -72,6 +74,19 @@ def get_day(year: int, month: int, day: int):
 
 def get_string_number(x: int):
     return str(x) if len(str(x)) > 1 else '0' + str(x)
+
+
+def count_detriment_words():
+    data = get_json_as_string(getcwd(), SEARCH_DETRIMENT_WORD).replace('detriment_word', DETRIMENT_WORD)
+    response = requests.post(url=COUNT_QUERY_URL, headers=HEADERS, data=data)
+    return __get_count_from_response(response)
+
+
+def find_phrase(phrase: str, slop: int) -> int:
+    data = get_json_as_string(getcwd(), SEARCH_PHRASE).replace('query_phrase', phrase) \
+        .replace('slop_number', str(slop)).encode('utf-8')
+    response = requests.post(url=COUNT_QUERY_URL, headers=HEADERS, data=data)
+    return __get_count_from_response(response)
 
 
 def create_bar_chart(numbers: List[int], filename: str, year: int):
