@@ -8,13 +8,14 @@ from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import get_json_as_string, CREATE_INDEX_JSON, SEARCH_JUDGEMENTS_BY_DAY, get_files_to_be_processed, \
-    extract_and_upload_data
+    extract_and_upload_data, SEARCH_DETRIMENT_WORD
 
 HOST = r'http://localhost:9200'
 INDEX_URL = HOST + r'/nlp-hw2'
 INDEX_DATA_URL = INDEX_URL + r'/judgements'
-HEADERS = {'content-type': 'application/json'}
 COUNT_QUERY_URL = INDEX_DATA_URL + r'/_count'
+HEADERS = {'content-type': 'application/json'}
+DETRIMENT_WORD = r'szkoda'
 
 
 def main():
@@ -23,14 +24,25 @@ def main():
     files = get_files_to_be_processed(input_dir)
     for file in tqdm(files, mininterval=15, unit='files'):
         extract_and_upload_data(file, judgement_year, INDEX_DATA_URL, HEADERS)
-    data = prepare_histogram_data(judgement_year)
-    print(data)
+    count_detriment_words()
+    prepare_histogram_data(judgement_year)
 
 
 def create_index_with_analyzer() -> str:
     data = get_json_as_string(getcwd(), CREATE_INDEX_JSON)
     response = requests.put(url=INDEX_URL, headers=HEADERS, data=data)
     return response.content
+
+
+def count_detriment_words():
+    data = get_json_as_string(getcwd(), SEARCH_DETRIMENT_WORD).replace('detriment_word', DETRIMENT_WORD)
+    response = requests.post(url=COUNT_QUERY_URL, headers=HEADERS, data=data)
+    return __get_count_from_response(response)
+
+
+def __get_count_from_response(response) -> int:
+    response_data = response.content.decode('utf-8')
+    return int(loads(response_data)["count"])
 
 
 def prepare_histogram_data(judgement_year: int) -> List[int]:
@@ -47,8 +59,7 @@ def count_judgements_for_month(judgement_year: int, month: int) -> int:
     data = get_json_as_string(getcwd(), SEARCH_JUDGEMENTS_BY_DAY).replace('first_day', first_day) \
         .replace('last_day', last_day)
     response = requests.post(url=COUNT_QUERY_URL, headers=HEADERS, data=data)
-    data = response.content.decode('utf-8')
-    return int(loads(data)["count"])
+    return __get_count_from_response(response)
 
 
 def get_day(year: int, month: int, day: int):

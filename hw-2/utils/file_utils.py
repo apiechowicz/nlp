@@ -11,6 +11,7 @@ JSONS_DIRECTORY = r'jsons'
 CREATE_INDEX_JSON = r'create-index-with-analyzer.json'
 INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
 JUDGEMENT_DATE_FORMAT = r'%Y-%m-%d'
+SEARCH_DETRIMENT_WORD = r'search-detriment-word.json'
 SEARCH_JUDGEMENTS_BY_DAY = r'search-judgements-by-date.json'
 
 
@@ -43,8 +44,7 @@ def extract_and_upload_data(file_path: str, year: int, url: str, headers: Dict[s
         for judgement in judgements:
             if __judgement_year_matches(judgement["judgmentDate"], year):
                 data = __get_required_data(judgement)
-                response = requests.post(url=url, headers=headers, data=data)
-                print(response.content)
+                requests.post(url=url, headers=headers, data=data)
 
 
 def __judgement_year_matches(date: str, year: int) -> bool:

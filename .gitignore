@@ -100,4 +100,5 @@ ENV/
 # mypy
 .mypy_cache/
 /.idea/
+/hw1/hw1.iml
 /hw-2/hw-2.iml
