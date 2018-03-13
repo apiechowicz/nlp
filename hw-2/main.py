@@ -93,6 +93,7 @@ def create_bar_chart(numbers: List[int], filename: str, year: int):
     output_file = join(OUTPUT_DIRECTORY_PATH, filename)
     create_output_dir()
     pyplot.bar(range(1, 12 + 1), numbers)
+    pyplot.xticks(range(1, 12 + 1))
     pyplot.title('Number of judgements per month in year {}'.format(str(year)))
     pyplot.xlabel('Month [-]')
     pyplot.ylabel('Number of judgements [-]')
