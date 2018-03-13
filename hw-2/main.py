@@ -11,15 +11,17 @@ from tqdm import tqdm
 from utils.argument_parser import parse_arguments
 from utils.file_utils import get_json_as_string, CREATE_INDEX_JSON, SEARCH_JUDGEMENTS_BY_DAY, SEARCH_DETRIMENT_WORD, \
     save_data, OUTPUT_DIRECTORY_PATH, create_output_dir, get_files_to_be_processed, extract_and_upload_data, \
-    SEARCH_PHRASE
+    SEARCH_PHRASE, SEARCH_JUDGES
 
 HOST = r'http://localhost:9200'
 INDEX_URL = HOST + r'/nlp-hw2'
 INDEX_DATA_URL = INDEX_URL + r'/judgements'
 COUNT_QUERY_URL = INDEX_DATA_URL + r'/_count'
+SEARCH_QUERY_URL = INDEX_DATA_URL + r'/_search'
 HEADERS = {'content-type': 'application/json'}
 DETRIMENT_WORD = r'szkoda'
 PHRASE = r'trwały uszczerbek na zdrowiu'
+NUMBER_OF_JUDGES = 3
 
 
 def main():
@@ -36,6 +38,7 @@ def main():
     save_data(
         'Given phrase has occurred {} times in judgements from year {}.'.format(find_phrase(PHRASE, 2), judgement_year),
         'exercise-8.txt')
+    save_data(search_top_judges(NUMBER_OF_JUDGES, judgement_year), 'exercise-9.txt')
     create_bar_chart(prepare_bar_chart_data(judgement_year), 'exercise-10.png', judgement_year)
 
 
@@ -87,6 +90,17 @@ def find_phrase(phrase: str, slop: int) -> int:
         .replace('slop_number', str(slop)).encode('utf-8')
     response = requests.post(url=COUNT_QUERY_URL, headers=HEADERS, data=data)
     return __get_count_from_response(response)
+
+
+def search_top_judges(number_of_judges: int, judgement_year: int) -> str:
+    data = get_json_as_string(getcwd(), SEARCH_JUDGES).replace('number_of_judges', str(number_of_judges))
+    response = requests.post(url=SEARCH_QUERY_URL, headers=HEADERS, data=data)
+    response_data = loads(response.content.decode('utf-8'))
+    top_judges_list = response_data["aggregations"]["judges"]["top_judges_names"]["buckets"]
+    result = 'Top {} judges by number of judgements in year {}:\n'.format(number_of_judges, judgement_year)
+    for pair in top_judges_list:
+        result += '{} - {}\n'.format(pair['key'], pair['doc_count'])
+    return result
 
 
 def create_bar_chart(numbers: List[int], filename: str, year: int):

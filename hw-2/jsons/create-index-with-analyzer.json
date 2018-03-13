@@ -28,7 +28,7 @@
           "type": "nested",
           "properties": {
             "name": {
-              "type": "text"
+              "type": "keyword"
             }
           }
         }
