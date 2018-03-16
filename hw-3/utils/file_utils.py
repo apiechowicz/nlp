@@ -1,9 +1,12 @@
 from json import loads
-from os import listdir
-from os.path import join
+from os import listdir, getcwd, makedirs
+from os.path import join, isdir
 from typing import List
 
 from utils.regex_utils import *
+
+OUTPUT_DIRECTORY_NAME = r'out'
+OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
 
 
 def get_files_to_be_processed(input_dir: str) -> List[str]:
@@ -22,3 +25,19 @@ def extract_judgements_from_given_year_from_file(file: str, year: int) -> List[D
         judgements = [judgement for judgement in judgements
                       if judgement_year_matches(get_judgement_date(judgement), year)]
         return judgements
+
+
+def save_data(data: List, filename: str):
+    __create_output_dir()
+    with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
+        file.write(str(data))
+
+
+def __create_output_dir():
+    if not isdir(OUTPUT_DIRECTORY_PATH):
+        makedirs(OUTPUT_DIRECTORY_PATH)
+
+
+def read_data(filename: str) -> List:
+    with open(join(OUTPUT_DIRECTORY_PATH, filename), 'r') as file:
+        return eval(file.read())

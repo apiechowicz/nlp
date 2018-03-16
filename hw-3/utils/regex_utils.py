@@ -1,5 +1,5 @@
 from datetime import datetime
-from re import fullmatch, sub
+from re import fullmatch, sub, search
 from typing import Dict
 
 INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
@@ -27,5 +27,13 @@ def replace_all_redundant_characters(content: str) -> str:
     content = content.replace('\n', ' ')
     content = content.replace('\t', ' ')
     content = sub("<[^>]*>", "", content)
-    content = sub('[,.;:\-–()\[\]"„…”/]', "", content)
+    content = sub('[,.;:\-–−()\[\]"„…”/]', "", content)
     return content
+
+
+def is_not_a_number(string: str):
+    return search('\d', string) is None
+
+
+def is_a_word(string: str):
+    return fullmatch('\w{2,}', string) is not None
