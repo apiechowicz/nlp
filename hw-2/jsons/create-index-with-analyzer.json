@@ -1,0 +1,38 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "analysis": {
+      "analyzer": {
+        "default": {
+          "tokenizer": "standard",
+          "filter": [
+            "morfologik_stem"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "judgements": {
+      "properties": {
+        "textContent": {
+          "type": "text"
+        },
+        "judgmentDate": {
+          "type": "date"
+        },
+        "caseNumber": {
+          "type": "keyword"
+        },
+        "judges": {
+          "type": "nested",
+          "properties": {
+            "name": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+  }
+}

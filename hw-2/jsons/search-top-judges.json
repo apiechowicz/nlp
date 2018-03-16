@@ -1,0 +1,18 @@
+{
+  "size": 0,
+  "aggs": {
+    "judges": {
+      "nested": {
+        "path": "judges"
+      },
+      "aggs": {
+        "top_judges_names": {
+          "terms": {
+            "field": "judges.name",
+            "size": number_of_judges
+          }
+        }
+      }
+    }
+  }
+}
