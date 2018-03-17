@@ -36,4 +36,4 @@ def is_not_a_number(string: str):
 
 
 def is_a_word(string: str):
-    return fullmatch('\w{2,}', string) is not None
+    return fullmatch('\w{2,}', string) is not None and not string == string.upper()

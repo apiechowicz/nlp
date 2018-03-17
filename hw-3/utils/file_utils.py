@@ -28,12 +28,12 @@ def extract_judgements_from_given_year_from_file(file: str, year: int) -> List[D
 
 
 def save_data(data: List, filename: str):
-    __create_output_dir()
+    create_output_dir()
     with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
         file.write(str(data))
 
 
-def __create_output_dir():
+def create_output_dir():
     if not isdir(OUTPUT_DIRECTORY_PATH):
         makedirs(OUTPUT_DIRECTORY_PATH)
 
