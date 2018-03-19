@@ -1,7 +1,7 @@
 from json import loads
 from os import listdir, getcwd, makedirs
 from os.path import join, isdir
-from typing import List
+from typing import List, Iterable
 
 from utils.regex_utils import *
 
@@ -27,7 +27,7 @@ def extract_judgements_from_given_year_from_file(file: str, year: int) -> List[D
         return judgements
 
 
-def save_data(data: List, filename: str):
+def save_data(data: Iterable, filename: str):
     create_output_dir()
     with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
         file.write(str(data))

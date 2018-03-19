@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from operator import itemgetter
 
 from matplotlib import pyplot
@@ -20,6 +21,8 @@ def main():
     save_data(not_in_dictionary, 'exercise-5.txt')
     # not_in_dictionary = read_data('exercise-5.txt')
     print_only_number_of_words(not_in_dictionary, number_of_words)
+    words_with_corrections = find_corrections(not_in_dictionary, results)
+    save_data(words_with_corrections, 'exercise-7.txt')
 
 
 def process_data(files: List[str], judgement_year: int) -> Dict[str, int]:
@@ -80,13 +83,49 @@ def find_words_that_are_not_in_dictionary(dictionary_path: str, results: List[Tu
     return not_in_dictionary
 
 
-def print_only_number_of_words(not_in_dictionary: List[str],
-                               number_of_words: int) -> None:
+def print_only_number_of_words(not_in_dictionary: List[str], number_of_words: int) -> None:
     if number_of_words > len(not_in_dictionary):
         print('There are only {} words that are not in dictionary.'.format(len(not_in_dictionary)))
         print(not_in_dictionary)
     else:
         print(not_in_dictionary[:number_of_words])
+
+
+def find_corrections(not_in_dictionary: List[str], results: List[Tuple[str, int]]) -> Dict[str, Tuple[str, int]]:
+    results_as_dict = {word: occurrences for word, occurrences in results}
+    words_with_corrections = OrderedDict()
+    for word in tqdm(not_in_dictionary, mininterval=15, unit=' words'):
+        up_to_two_away = words_up_to_two_moves_away(word)
+        best_match = None
+        best_score = 0
+        for candidate in up_to_two_away:
+            try:
+                if candidate != word and results_as_dict[candidate] > best_score:
+                    best_match = candidate
+                    best_score = results_as_dict[candidate]
+            except KeyError:
+                pass
+        words_with_corrections[word] = (best_match, best_score)
+    return words_with_corrections
+
+
+def words_up_to_two_moves_away(word: str) -> List[str]:
+    one_away = words_one_move_away(word)
+    two_away = []
+    for w in one_away:
+        one_from_one_away = words_one_move_away(w)
+        two_away += one_from_one_away
+    return one_away + two_away
+
+
+def words_one_move_away(word: str) -> List[str]:
+    letters = 'aąbcćdeęfghijklłmnńoóprsśtuwyzżź'
+    splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
+    deletes = [L + R[1:] for L, R in splits if R]
+    transposes = [L + R[1] + R[0] + R[2:] for L, R in splits if len(R) > 1]
+    replaces = [L + c + R[1:] for L, R in splits if R for c in letters]
+    inserts = [L + c + R for L, R in splits for c in letters]
+    return deletes + transposes + replaces + inserts
 
 
 if __name__ == '__main__':
