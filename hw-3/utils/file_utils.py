@@ -41,3 +41,17 @@ def create_output_dir():
 def read_data(filename: str) -> List:
     with open(join(OUTPUT_DIRECTORY_PATH, filename), 'r') as file:
         return eval(file.read())
+
+
+def read_dictionary_data(dictionary_path: str) -> Dict[chr, List[str]]:
+    with open(dictionary_path, 'r') as file:
+        data = {}
+        for line in file.readlines():
+            word = line.split(';')[1].lower()
+            if len(word) > 1:
+                bucket = word[:2].lower()
+                try:
+                    data[bucket].append(word)
+                except KeyError:
+                    data[bucket] = [word]
+    return data
