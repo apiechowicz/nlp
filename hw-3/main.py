@@ -23,6 +23,8 @@ def main():
     print_only_number_of_words(not_in_dictionary, number_of_words)
     words_with_corrections = find_corrections(not_in_dictionary, results)
     save_data(words_with_corrections, 'exercise-7.txt')
+    words_with_corrections = find_corrections_using_Levenshtein_distance(not_in_dictionary, results, 2)
+    save_data(words_with_corrections, 'exercise-7-alternative-method.txt')
 
 
 def process_data(files: List[str], judgement_year: int) -> Dict[str, int]:
@@ -53,7 +55,6 @@ def create_chart(data: List, filename: str, year: int):
     output_file = join(OUTPUT_DIRECTORY_PATH, filename)
     create_output_dir()
     x, y = prepare_data_for_plotting(data)
-    # pyplot.semilogy(x, y)
     pyplot.loglog(x, y)
     pyplot.title('Number of word occurrences vs position on the\nfrequency list for words in judgements from {}'.format(
         str(year)))
@@ -126,6 +127,49 @@ def words_one_move_away(word: str) -> List[str]:
     replaces = [L + c + R[1:] for L, R in splits if R for c in letters]
     inserts = [L + c + R for L, R in splits for c in letters]
     return deletes + transposes + replaces + inserts
+
+
+def find_corrections_using_Levenshtein_distance(not_in_dictionary: List[str], results: List[Tuple[str, int]],
+                                                distance: int) -> Dict[str, Tuple[str, int]]:
+    words_with_corrections = OrderedDict()
+    for word in tqdm(not_in_dictionary, mininterval=15, unit=' words'):
+        best_match = None
+        best_score = 0
+        for candidate, score in results:
+            if length_difference_is_not_greater_than_distance(word, candidate, distance) \
+                    and Levenshtein_distance(word, candidate) <= distance and word != candidate:
+                best_match = candidate
+                best_score = score
+        words_with_corrections[word] = (best_match, best_score)
+    return words_with_corrections
+
+
+def length_difference_is_not_greater_than_distance(word, candidate, distance):
+    return abs(len(word) - len(candidate)) <= distance
+
+
+def Levenshtein_distance(word: str, candidate: str) -> int:
+    first_row = [i for i in range(len(candidate) + 2)]
+    second_row = [0 for i in range(len(candidate) + 2)]
+    for i in range(0, len(word)):
+        second_row[0] = i + 1
+        for j in range(0, len(candidate)):
+            deletion_cost = first_row[j + 1] + 1
+            insertion_cost = second_row[j] + 1
+            if word[i] == candidate[j]:
+                substitution_cost = first_row[j]
+            else:
+                substitution_cost = first_row[j] + 1
+            second_row[j + 1] = min(deletion_cost, insertion_cost, substitution_cost)
+            swap_lists(first_row, second_row)
+    return first_row[len(candidate) + 1]
+
+
+def swap_lists(first_row: List[int], second_row: List[int]):
+    for i in range(len(first_row)):
+        copy = first_row[i]
+        first_row[i] = second_row[i]
+        second_row[i] = copy
 
 
 if __name__ == '__main__':
