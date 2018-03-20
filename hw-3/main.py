@@ -149,27 +149,22 @@ def length_difference_is_not_greater_than_distance(word, candidate, distance):
 
 
 def Levenshtein_distance(word: str, candidate: str) -> int:
-    first_row = [i for i in range(len(candidate) + 2)]
-    second_row = [0 for i in range(len(candidate) + 2)]
-    for i in range(0, len(word)):
-        second_row[0] = i + 1
-        for j in range(0, len(candidate)):
-            deletion_cost = first_row[j + 1] + 1
-            insertion_cost = second_row[j] + 1
-            if word[i] == candidate[j]:
-                substitution_cost = first_row[j]
+    distances = [[0 for i in range(len(candidate) + 1)] for j in range(len(word) + 1)]
+    for i in range(0, len(word) + 1):
+        distances[i][0] = 1
+    for j in range(0, len(candidate) + 1):
+        distances[0][j] = j
+    for j in range(1, len(candidate) + 1):
+        for i in range(1, len(word) + 1):
+            if word[i - 1] == candidate[j - 1]:
+                cost = 0
             else:
-                substitution_cost = first_row[j] + 1
-            second_row[j + 1] = min(deletion_cost, insertion_cost, substitution_cost)
-            swap_lists(first_row, second_row)
-    return first_row[len(candidate) + 1]
-
-
-def swap_lists(first_row: List[int], second_row: List[int]):
-    for i in range(len(first_row)):
-        copy = first_row[i]
-        first_row[i] = second_row[i]
-        second_row[i] = copy
+                cost = 1
+            deletion_cost = distances[i - 1][j] + 1
+            insertion_cost = distances[i][j - 1] + 1
+            substitution_cost = distances[i - 1][j - 1] + cost
+            distances[i][j] = min(deletion_cost, insertion_cost, substitution_cost)
+    return distances[len(word)][len(candidate)]
 
 
 if __name__ == '__main__':
