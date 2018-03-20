@@ -4,7 +4,7 @@ from os import listdir, makedirs
 from os.path import join, basename, isdir
 from typing import List, Dict
 
-from hw1.utils.regex_utils import is_valid_input_file, judgement_year_matches
+from utils.regex_utils import is_valid_input_file, judgement_year_matches
 
 OUTPUT_DIRECTORY_NAME = r'out'
 OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)

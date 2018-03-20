@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 
-from hw1.utils.regex_utils import is_valid_input_file
+from utils.regex_utils import is_valid_input_file
 
 
 class FileNameRegexTest(TestCase):

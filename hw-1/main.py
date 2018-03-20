@@ -3,11 +3,11 @@ from typing import Tuple, List, Dict
 from matplotlib import pyplot
 from tqdm import tqdm
 
-from hw1.utils.argument_parser import parse_arguments
-from hw1.utils.file_utils import get_files_to_be_processed, get_absolute_path, \
+from utils.argument_parser import parse_arguments
+from utils.file_utils import get_files_to_be_processed, get_absolute_path, \
     extract_judgements_from_given_year_from_file, extract_from_judgement, OUTPUT_DIRECTORY_PATH, save_data, \
     create_output_dir
-from hw1.utils.regex_utils import find_pattern_in_string, MONEY_PATTERN, convert_money_string_to_int, \
+from utils.regex_utils import find_pattern_in_string, MONEY_PATTERN, convert_money_string_to_int, \
     DETRIMENT_PATTERN, LAW_NAME, find_pattern_once_in_string, ARTICLE_PATTERN
 
 

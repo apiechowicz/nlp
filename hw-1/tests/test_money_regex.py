@@ -3,7 +3,7 @@ from unittest import TestCase, main
 
 from parameterized import parameterized
 
-from hw1.utils.regex_utils import find_pattern_in_string, MONEY_PATTERN
+from utils.regex_utils import find_pattern_in_string, MONEY_PATTERN
 
 
 def generate_test_cases():
