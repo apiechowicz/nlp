@@ -1,3 +1,4 @@
+from math import log2
 from operator import itemgetter
 
 from tqdm import tqdm
@@ -11,16 +12,17 @@ def main():
     input_dir, judgement_year = parse_arguments()
     files = get_files_to_be_processed(input_dir)
     unigram_frequency_list = process_data(files, judgement_year, True)
-    unigram_frequency_list = sort_dictionary(unigram_frequency_list)
     save_data(unigram_frequency_list, 'exercise-1.txt')
     # unigram_frequency_list = read_data('exercise-1.txt')
     bigram_frequency_list = process_data(files, judgement_year, False)
-    bigram_frequency_list = sort_dictionary(bigram_frequency_list)
     save_data(bigram_frequency_list, 'exercise-2.txt')
     # bigram_frequency_list = read_data('exercise-2.txt')
+    pmi_list = create_pmi_list(unigram_frequency_list, bigram_frequency_list)
+    save_data(pmi_list, 'exercise-3-4-5.txt')
+    # pmi_list = read_data('exercise-3-4-5.txt')
 
 
-def process_data(files: List[str], judgement_year: int, process_single: bool) -> Dict[str, int]:
+def process_data(files: List[str], judgement_year: int, process_single: bool) -> List[Tuple[str, int]]:
     words_with_number_of_occurrences = dict()
     for file in tqdm(files, mininterval=15, unit=' files'):
         judgements = extract_judgements_from_given_year_from_file(file, judgement_year)
@@ -32,7 +34,7 @@ def process_data(files: List[str], judgement_year: int, process_single: bool) ->
                 count_single_words_in_content(content, words_with_number_of_occurrences)
             else:
                 count_double_words_in_content(content, words_with_number_of_occurrences)
-    return words_with_number_of_occurrences
+    return sort_dictionary(words_with_number_of_occurrences)
 
 
 def count_single_words_in_content(content: List[str], words_with_number_of_occurrences: Dict[str, int]) -> None:
@@ -60,8 +62,32 @@ def count_double_words_in_content(content: List[str], words_with_number_of_occur
             update_dictionary(words_with_number_of_occurrences, ' '.join(phrase).lower())
 
 
-def sort_dictionary(results: Dict[str, int]):
+def sort_dictionary(results: Dict[str, int]) -> List[Tuple[str, int]]:
     return sorted(results.items(), key=itemgetter(1), reverse=True)
+
+
+def create_pmi_list(unigram_frequency_list: List[Tuple[str, int]],
+                    bigram_frequency_list: List[Tuple[str, int]]) -> List[Tuple[str, int]]:
+    unigram_dict = convert_ngram_list_to_dict(unigram_frequency_list)
+    unigram_total_words = sum_occurrences_in_ngram_frequency_list(unigram_frequency_list)
+    bigram_total_words = sum_occurrences_in_ngram_frequency_list(bigram_frequency_list)
+    pmi_list = []
+    for phrase, occurrences in tqdm(bigram_frequency_list, mininterval=15, unit=' bigrams'):
+        x, y = phrase.split(' ')
+        px = unigram_dict[x] / unigram_total_words
+        py = unigram_dict[y] / unigram_total_words
+        pxy = occurrences / bigram_total_words
+        pmi = log2(pxy / (px * py))
+        pmi_list.append((phrase, pmi))
+    return sorted(pmi_list, key=itemgetter(1), reverse=True)
+
+
+def convert_ngram_list_to_dict(ngram_frequency_list: List[Tuple[str, int]]) -> Dict[str, int]:
+    return {ngram: occurrences for ngram, occurrences in ngram_frequency_list}
+
+
+def sum_occurrences_in_ngram_frequency_list(ngram_frequency_list: List[Tuple[str, int]]) -> int:
+    return sum(occurrences for phrase, occurrences in ngram_frequency_list)
 
 
 if __name__ == '__main__':
