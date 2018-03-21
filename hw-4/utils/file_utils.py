@@ -30,7 +30,8 @@ def extract_judgements_from_given_year_from_file(file: str, year: int) -> List[D
 def save_data(data: Iterable, filename: str):
     create_output_dir()
     with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
-        file.write(str(data))
+        for element in data:
+            file.write(str(element) + '\n')
 
 
 def create_output_dir():
@@ -40,4 +41,7 @@ def create_output_dir():
 
 def read_data(filename: str) -> List:
     with open(join(OUTPUT_DIRECTORY_PATH, filename), 'r') as file:
-        return eval(file.read())
+        data = []
+        for line in file:
+            data.append(eval(line))
+        return data

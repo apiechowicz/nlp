@@ -55,8 +55,9 @@ def count_double_words_in_content(content: List[str], words_with_number_of_occur
         for word in phrase:
             if not is_not_a_number(word) or not is_a_word(word):
                 is_phrase = False
+                break
         if is_phrase:
-            update_dictionary(words_with_number_of_occurrences, ' '.join(phrase))
+            update_dictionary(words_with_number_of_occurrences, ' '.join(phrase).lower())
 
 
 def sort_dictionary(results: Dict[str, int]):
