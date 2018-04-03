@@ -1,3 +1,4 @@
+from math import log2
 from operator import itemgetter
 from typing import List, Tuple, Dict
 
@@ -21,6 +22,9 @@ def main():
     bigram_frequency_list = create_bigram_list(judgement_files)
     save_data(bigram_frequency_list, 'exercise-3-4.txt')
     # bigram_frequency_list = read_data('exercise-3-4.txt')
+    llr_list = create_llr_list(bigram_frequency_list)
+    save_data(llr_list, 'exercise-5.txt')
+    # llr_list = read_data('exercise-5.txt')
 
 
 def create_bigram_list(judgement_files: List[str]) -> List[Tuple[str, int]]:
@@ -48,6 +52,52 @@ def update_dictionary(words_with_number_of_occurrences: Dict[str, int], word: st
 
 def sort_dictionary(results: Dict[str, int]) -> List[Tuple[str, int]]:
     return sorted(results.items(), key=itemgetter(1), reverse=True)
+
+
+def create_llr_list(bigram_frequency_list: List[Tuple[str, int]]) -> List[Tuple[str, int]]:
+    bigram_total_words = sum_occurrences_in_ngram_frequency_list(bigram_frequency_list)
+    event_occurrences = count_event_occurrences(bigram_frequency_list)
+    llr_list = []
+    for phrase, occurrences in tqdm(bigram_frequency_list, mininterval=1, unit=' bigrams'):
+        a, b = phrase.split(' ')
+        k_11 = occurrences
+        k_12 = event_occurrences[b][1] - occurrences
+        k_21 = event_occurrences[a][0] - occurrences
+        k_22 = bigram_total_words - k_11 - k_12 - k_21
+        llr = 2 * (k_11 + k_12 + k_21 + k_22) * (entropy([k_11, k_12, k_21, k_22]) - entropy([k_11 + k_12, k_21 + k_22])
+                                                 - entropy([k_11 + k_21, k_12 + k_22]))
+        llr_list.append((phrase, llr))
+    return sorted(llr_list, key=itemgetter(1), reverse=True)
+
+
+def sum_occurrences_in_ngram_frequency_list(ngram_frequency_list: List[Tuple[str, int]]) -> int:
+    return sum(occurrences for phrase, occurrences in ngram_frequency_list)
+
+
+def count_event_occurrences(bigram_frequency_list: List[Tuple[str, int]]) -> Dict[str, Tuple[int, int]]:
+    event_occurrences = dict()
+    # word -> (number of occurrences as first element, number of occurrences as second element)
+    for phrase, count in bigram_frequency_list:
+        a, b = phrase.split(' ')
+        try:
+            event_occurrences[a] = (event_occurrences[a][0] + count, event_occurrences[a][1])
+        except KeyError:
+            event_occurrences[a] = (count, 0)
+        try:
+            event_occurrences[b] = (event_occurrences[b][0], event_occurrences[b][1] + count)
+        except KeyError:
+            event_occurrences[b] = (0, count)
+    return event_occurrences
+
+
+def entropy(items: List[int]) -> float:
+    N = sum(items)
+    return sum(nlogn(item, N) for item in items)
+
+
+def nlogn(item: int, N: int):
+    k_div_N = item / N
+    return k_div_N * log2(k_div_N + int(item == 0))
 
 
 if __name__ == '__main__':
