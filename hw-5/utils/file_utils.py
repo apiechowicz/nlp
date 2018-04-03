@@ -2,7 +2,7 @@ from datetime import datetime
 from json import loads
 from os import listdir, getcwd, makedirs
 from re import fullmatch
-from typing import List, Dict
+from typing import List, Dict, Callable, Iterable
 
 import requests
 from os.path import join, isdir, basename
@@ -15,12 +15,13 @@ OUTPUT_DIRECTORY_NAME = r'out'
 OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
 ENCODING = r'utf-8'
 TAGGED_JUDGEMENTS_DIRECTORY_NAME = r'tagged-judgements'
+TAGGED_JUDGEMENTS_DIRECTORY = join(OUTPUT_DIRECTORY_PATH, TAGGED_JUDGEMENTS_DIRECTORY_NAME)
 
 
-def get_files_to_be_processed(input_dir: str) -> List[str]:
+def get_files_to_be_processed(input_dir: str, filename_validating_function: Callable[[str], bool]) -> List[str]:
     files_to_be_processed = []
     for filename in listdir(input_dir):
-        if is_valid_input_file(filename):
+        if filename_validating_function(filename):
             files_to_be_processed.append(join(input_dir, filename))
     return files_to_be_processed
 
@@ -54,12 +55,37 @@ def __judgement_year_matches(date: str, year: int) -> bool:
 
 
 def save_tagged_judgement(data: str, judgement_filename: str, judgement_number: int):
-    create_output_dir(join(OUTPUT_DIRECTORY_PATH, TAGGED_JUDGEMENTS_DIRECTORY_NAME))
+    create_output_dir(TAGGED_JUDGEMENTS_DIRECTORY)
     filename = '{}-{}.txt'.format(judgement_filename.replace('.json', ''), judgement_number)
-    with open(join(OUTPUT_DIRECTORY_PATH, TAGGED_JUDGEMENTS_DIRECTORY_NAME, filename), 'w+') as file:
+    with open(join(TAGGED_JUDGEMENTS_DIRECTORY, filename), 'w+') as file:
         file.write(data)
 
 
 def create_output_dir(path: str):
     if not isdir(path):
         makedirs(path)
+
+
+def get_words_from_tagged_judgement(file_path: str) -> List[str]:
+    words = []
+    with open(file_path) as file:
+        for line in file:
+            if ':' in line:
+                word = ':'.join(line.strip().replace('\t', ':').split(':')[:2])
+                words.append(word)
+    return words
+
+
+def save_data(data: Iterable, filename: str):
+    create_output_dir(OUTPUT_DIRECTORY_PATH)
+    with open(join(OUTPUT_DIRECTORY_PATH, filename), 'w+') as file:
+        for element in data:
+            file.write(str(element) + '\n')
+
+
+def read_data(filename: str) -> List:
+    with open(join(OUTPUT_DIRECTORY_PATH, filename), 'r') as file:
+        data = []
+        for line in file:
+            data.append(eval(line))
+        return data
