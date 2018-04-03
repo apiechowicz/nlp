@@ -7,7 +7,7 @@ from tqdm import tqdm
 from utils.argument_parser import parse_arguments
 from utils.file_utils import get_files_to_be_processed, TAGGED_JUDGEMENTS_DIRECTORY, get_words_from_tagged_judgement, \
     save_data, extract_and_upload_data, is_valid_input_file
-from utils.regex_utils import is_not_a_number, is_a_word
+from utils.regex_utils import is_not_a_number, is_a_word, is_noun, is_adjective
 
 HOST = r'http://localhost:9200'
 HEADERS = {'content-type': 'text/plain', 'charset': 'utf-8'}
@@ -25,6 +25,9 @@ def main():
     llr_list = create_llr_list(bigram_frequency_list)
     save_data(llr_list, 'exercise-5.txt')
     # llr_list = read_data('exercise-5.txt')
+    filtered_llr = filter_llr(llr_list)
+    save_data(filtered_llr, 'exercise-6.txt')
+    # filtered_llr = read_data('exercise-6.txt')
 
 
 def create_bigram_list(judgement_files: List[str]) -> List[Tuple[str, int]]:
@@ -98,6 +101,15 @@ def entropy(items: List[int]) -> float:
 def nlogn(item: int, N: int):
     k_div_N = item / N
     return k_div_N * log2(k_div_N + int(item == 0))
+
+
+def filter_llr(llr_list: List[Tuple[str, int]]) -> List[Tuple[str, int]]:
+    filtered = []
+    for phrase, count in llr_list:
+        first_word, second_word = phrase.split(' ')
+        if is_noun(first_word) and (is_noun(second_word) or is_adjective(second_word)):
+            filtered.append((phrase, count))
+    return filtered
 
 
 if __name__ == '__main__':
