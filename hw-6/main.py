@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
@@ -7,13 +9,14 @@ from utils.regex_utils import *
 
 
 def main():
-    input_dir, judgement_year, replace_n, test_data_percentage = parse_arguments()
+    input_dir, judgement_year, replace_n, learning_data_percentage = parse_arguments()
     files = get_files_to_be_processed(input_dir)
     judgements_by_type = get_judgements_by_type_dict()
     for file in tqdm(files, unit='files'):
         extract_judgements_from_file(file, input_dir, judgement_year, judgements_by_type, replace_n)
     save_data(judgements_by_type)
     # judgements_by_type = read_data()
+    learning, testing = split_into_learning_and_testing_sets(judgements_by_type, learning_data_percentage)
 
 
 def get_judgements_by_type_dict() -> Dict[str, List[str]]:
@@ -46,6 +49,22 @@ def replace_and_add_to_dict(replace_n: int, substantiation: str, judgements_by_t
     substantiation = replace_multiple_white_characters(substantiation)
     substantiation = substantiation.lstrip().rstrip()
     judgements_by_type[case_label].append(substantiation)
+
+
+def split_into_learning_and_testing_sets(judgements_by_type: Dict[str, List[str]], learning_data_percentage: int) \
+        -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
+    learning_data = get_judgements_by_type_dict()
+    testing_data = get_judgements_by_type_dict()
+    for label in ALL_LABELS:
+        data = judgements_by_type[label]
+        data_size = len(data)
+        if data_size > 2:
+            learning_data_size = round(learning_data_percentage * data_size / 100)
+            if data_size - learning_data_size < 1:
+                learning_data_size -= 1
+            learning_data[label] = data[:learning_data_size]
+            testing_data[label] = data[learning_data_size:]
+    return learning_data, testing_data
 
 
 if __name__ == '__main__':
