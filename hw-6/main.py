@@ -2,7 +2,7 @@ from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import get_files_to_be_processed, extract_judgements_from_given_year_from_file, \
-    get_absolute_path, read_top_n_words
+    get_absolute_path, read_top_n_words, save_data
 from utils.regex_utils import *
 
 
@@ -10,25 +10,17 @@ def main():
     input_dir, judgement_year, replace_n, test_data_percentage = parse_arguments()
     files = get_files_to_be_processed(input_dir)
     judgements_by_type = get_judgements_by_type_dict()
-    for file in tqdm(files, mininterval=1, unit='files'):
+    for file in tqdm(files, unit='files'):
         extract_judgements_from_file(file, input_dir, judgement_year, judgements_by_type, replace_n)
+    save_data(judgements_by_type)
+    # judgements_by_type = read_data()
 
 
-def get_judgements_by_type_dict():
+def get_judgements_by_type_dict() -> Dict[str, List[str]]:
     judgements_by_type = dict()
-    add_empty_label(judgements_by_type, CIVIL_CASES_LABEL)
-    add_empty_label(judgements_by_type, INSURANCE_CASES_LABEL)
-    add_empty_label(judgements_by_type, CRIMINAL_CASES_LABEL)
-    add_empty_label(judgements_by_type, ECONOMIC_CASES_LABEL)
-    add_empty_label(judgements_by_type, LABOR_CASES_LABEL)
-    add_empty_label(judgements_by_type, FAMILY_CASES_LABEL)
-    add_empty_label(judgements_by_type, OFFENSE_CASES_LABEL)
-    add_empty_label(judgements_by_type, COMPETITION_CASES_LABEL)
+    for label in ALL_LABELS:
+        judgements_by_type[label] = []
     return judgements_by_type
-
-
-def add_empty_label(dictionary: Dict[str, List[str]], label: str):
-    dictionary[label] = []
 
 
 def extract_judgements_from_file(file: str, input_dir: str, judgement_year: int,
