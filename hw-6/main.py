@@ -3,6 +3,7 @@ from typing import Tuple
 from requests import post
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report, precision_recall_fscore_support
+from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 from tqdm import tqdm
@@ -90,13 +91,15 @@ def tagg_substantiation(substantiation: str) -> str:
 
 def create_classifiers_and_evaluate(judgements_by_type: Dict[str, List[str]], teaching_data_percentage: int,
                                     tagged: bool) -> None:
-    for label in judgements_by_type.keys():
+    unit = 'labels (tagged)' if tagged else 'labels'
+    for label in tqdm(sorted([l for l in judgements_by_type.keys()]), unit=unit):
         teaching_data_x, teaching_data_y, testing_data_x, testing_data_y = split_data_sets(judgements_by_type,
                                                                                            teaching_data_percentage,
                                                                                            label)
         if len(set(teaching_data_y)) > 1 and len(set(teaching_data_y)) > 1:
             clf = create_binary_tf_idf_classifier()
             clf.fit(teaching_data_x, teaching_data_y)
+            clf = clf.best_estimator_
             predictions = clf.predict(testing_data_x)
             report = classification_report(testing_data_y, predictions)
             micro = precision_recall_fscore_support(testing_data_y, predictions, average='micro')
@@ -126,11 +129,17 @@ def add_data_to_sets(data, data_x, data_y, label):
     data_y.extend([label for i in range(0, len(data))])
 
 
-def create_binary_tf_idf_classifier() -> Pipeline:
-    return Pipeline([
+def create_binary_tf_idf_classifier() -> GridSearchCV:
+    pipeline = Pipeline([
         ('tfidf', TfidfVectorizer()),
         ('clf', LinearSVC())
     ])
+    parameters = {
+        'tfidf__max_df': (0.25, 0.5, 0.75),
+        "clf__C": [0.01, 0.1, 1],
+        "clf__class_weight": ['balanced', None]
+    }
+    return GridSearchCV(pipeline, parameters, n_jobs=-1)
 
 
 if __name__ == '__main__':
