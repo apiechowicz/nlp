@@ -1,7 +1,7 @@
 from json import loads
 from os import listdir, getcwd, makedirs
 from os.path import join, isdir
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from utils.regex_utils import is_valid_input_file, judgement_year_matches, get_judgement_date, ALL_LABELS
 
@@ -78,9 +78,17 @@ def create_output_file():
     open(OUTPUT_FILE_PATH, 'w').close()
 
 
-def append_to_output_file(group_name: str, tagged: bool, text: str) -> None:
+def append_to_output_file(group_name: str, tagged: bool, text: str, micro: Tuple[float, float, float],
+                          macro: Tuple[float, float, float]) -> None:
     with open(OUTPUT_FILE_PATH, 'a') as file:
         file.write('Classification results for group:\t{}\n'.format(group_name))
         file.write('Using tagged data?\t\t\t\t\t{}\n'.format(tagged))
         file.write(text)
+        file.write(pretty_print_data('Micro', micro))
+        file.write(pretty_print_data('Macro', macro))
         file.write(60 * '-' + '\n')
+
+
+def pretty_print_data(name: str, data: Tuple[float, float, float]) -> str:
+    tab = 2 * '\t'
+    return '\t' + name + tab + tab.join([str(round(val, 3)) for val in data if val is not None]) + '\n'

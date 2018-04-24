@@ -2,7 +2,7 @@ from typing import Tuple
 
 from requests import post
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, precision_recall_fscore_support
 from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 from tqdm import tqdm
@@ -98,7 +98,10 @@ def create_classifiers_and_evaluate(judgements_by_type: Dict[str, List[str]], te
             clf = create_binary_tf_idf_classifier()
             clf.fit(teaching_data_x, teaching_data_y)
             predictions = clf.predict(testing_data_x)
-            append_to_output_file(label, tagged, classification_report(testing_data_y, predictions))
+            report = classification_report(testing_data_y, predictions)
+            micro = precision_recall_fscore_support(testing_data_y, predictions, average='micro')
+            macro = precision_recall_fscore_support(testing_data_y, predictions, average='macro')
+            append_to_output_file(label, tagged, report, micro, macro)
 
 
 def split_data_sets(judgements_by_type: Dict[str, List[str]], learning_data_percentage: int, classifier_label: str) \
