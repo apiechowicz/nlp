@@ -1,6 +1,5 @@
 from datetime import datetime
-from itertools import product
-from re import fullmatch, sub, search, split
+from re import fullmatch, sub, search, split, IGNORECASE
 from typing import Dict, List
 
 INPUT_FILE_NAME_PATTERN = r'judgments-\d+\.json'
@@ -24,8 +23,6 @@ SIGNATURE_REGEX_WITH_LABELS = {'A?C.*': CIVIL_CASES_LABEL, 'A?U.*': INSURANCE_CA
                                'R.*': FAMILY_CASES_LABEL, 'W.*': OFFENSE_CASES_LABEL, 'Am.*': COMPETITION_CASES_LABEL}
 
 SUBSTANTIATION_WORD = r'uzasadnienie'
-SUBSTANTIATION_TAG = r'h2'
-SUBSTANTIATION_WORD_VARIANTS = []
 
 
 def is_valid_input_file(filename: str) -> bool:
@@ -66,29 +63,9 @@ def replace_non_space_white_characters(content: str) -> str:
 
 
 def extract_substantiation(content: str) -> str or None:
-    if len(SUBSTANTIATION_WORD_VARIANTS) == 0:
-        create_substantiation_word_variants()
-    for variant in SUBSTANTIATION_WORD_VARIANTS:
-        if search(variant, content):
-            return split(variant, content, 1)[1]
+    if search(SUBSTANTIATION_WORD, content, IGNORECASE):
+        return split(SUBSTANTIATION_WORD, content, 1, IGNORECASE)[1]
     return None
-
-
-def create_substantiation_word_variants():
-    starting_tag = '<{}>'.format(SUBSTANTIATION_TAG)
-    starting_tag_variants = [starting_tag, starting_tag.upper()]
-    substantiation_case_sensitivity = [SUBSTANTIATION_WORD.lower(), SUBSTANTIATION_WORD.upper(),
-                                       SUBSTANTIATION_WORD.lower().title()]
-    substantiation_case_sensitivity_with_spaces = [' '.join(variant)
-                                                   for variant in substantiation_case_sensitivity]
-    delimiters = ['', '.', ':', ';', '-']
-    ending_tag = '</{}>'.format(SUBSTANTIATION_TAG)
-    ending_tag_variants = [ending_tag, ending_tag.upper()]
-    combinations = product(starting_tag_variants,
-                           substantiation_case_sensitivity + substantiation_case_sensitivity_with_spaces, delimiters,
-                           ending_tag_variants)
-    global SUBSTANTIATION_WORD_VARIANTS
-    SUBSTANTIATION_WORD_VARIANTS = [''.join(combination) for combination in combinations]
 
 
 def replace_redundant_characters(content: str) -> str:
