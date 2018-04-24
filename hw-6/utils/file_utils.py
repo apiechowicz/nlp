@@ -9,6 +9,7 @@ OUTPUT_DIRECTORY_NAME = r'out'
 OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
 TOP_WORDS_FILE = join(getcwd(), '../hw-3/out/exercise-2.txt')
 DATA_FILE_EXTENSION = r'.txt'
+OUTPUT_FILE_PATH = join(OUTPUT_DIRECTORY_PATH, r'classification_results.out')
 
 
 def get_files_to_be_processed(input_dir: str) -> List[str]:
@@ -68,3 +69,15 @@ def read_data() -> Dict[str, List[str]]:
             for line in file:
                 judgements_by_type[label].append(line.rstrip())
     return judgements_by_type
+
+
+def create_output_file():
+    open(OUTPUT_FILE_PATH, 'w').close()
+
+
+def append_to_output_file(group_name: str, tagged: bool, text: str) -> None:
+    with open(OUTPUT_FILE_PATH, 'a') as file:
+        file.write('Classification results for group:\t{}\n'.format(group_name))
+        file.write('Using tagged data?\t\t\t\t\t{}\n'.format(tagged))
+        file.write(text)
+        file.write(60 * '-' + '\n')
