@@ -114,7 +114,6 @@ def replace_single_letters(content: str) -> str:
     letters = [letter for letter in 'aąbcćdeęfghijklłmnńoóprsśtuwzżź']
     for letter in letters:
         content = sub('\s{}\s'.format(letter), ' ', content)
-        content = sub('\s{}\s'.format(letter.upper()), ' ', content)
     return content
 
 

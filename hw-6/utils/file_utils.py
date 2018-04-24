@@ -55,7 +55,7 @@ def save_data(judgements_by_type: Dict[str, List[str]]) -> None:
                 file.write(substantiation + '\n')
 
 
-def create_output_dir(path: str):
+def create_output_dir(path: str) -> None:
     if not isdir(path):
         makedirs(path)
 
