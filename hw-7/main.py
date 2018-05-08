@@ -89,15 +89,35 @@ def create_relations_graph(wn, words: List[Tuple[str, int, str]]) -> Tuple[DiGra
         graph.add_node(get_vertex_label(word))
     edge_labels = {}
     for word, synset in word_synset_pairs:
-        synset.ilrs = [relation for relation in synset.ilrs if relation[0] in synset_ids]
-        for id_of_synset_in_relation, relation_name in synset.ilrs:
-            words_in_relation = get_words_in_synset_that_match(wn, id_of_synset_in_relation, words)
-            for word_in_relation in words_in_relation:
-                u = get_vertex_label(word)
-                v = get_vertex_label(word_in_relation)
-                graph.add_edge(u, v)
-                edge_labels[(u, v)] = relation_name  # todo figure out how to use MultiDiGraph edges instead?
+        add_synonym_relations(synset, word, words, edge_labels, graph)
+        find_and_add_relations(synset, synset_ids, wn, words, word, graph, edge_labels)
     return graph, edge_labels
+
+
+def get_vertex_label(word: Tuple[str, int, str]) -> str:
+    return '_'.join([str(part) for part in word][:2])
+
+
+def add_synonym_relations(synset, word, words, edge_labels, graph):
+    for synonym in synset.synonyms:
+        if synonym.literal in [word[0] for word in words] and synonym.literal != word[0]:
+            u = get_vertex_label(word)
+            v = get_vertex_label((synonym.literal, int(synonym.sense), word[2]))
+            graph.add_edge(u, v)
+            edge_labels[(u, v)] = 'synonym'
+            graph.add_edge(v, u)
+            edge_labels[(v, u)] = 'synonym'
+
+
+def find_and_add_relations(synset, synset_ids, wn, words, word, graph, edge_labels):
+    synset.ilrs = [relation for relation in synset.ilrs if relation[0] in synset_ids]
+    for id_of_synset_in_relation, relation_name in synset.ilrs:
+        words_in_relation = get_words_in_synset_that_match(wn, id_of_synset_in_relation, words)
+        for word_in_relation in words_in_relation:
+            u = get_vertex_label(word)
+            v = get_vertex_label(word_in_relation)
+            graph.add_edge(u, v)
+            edge_labels[(u, v)] = relation_name
 
 
 def get_words_in_synset_that_match(wn, id_of_synset: str, words: List[Tuple[str, int, str]]) \
@@ -109,10 +129,6 @@ def get_words_in_synset_that_match(wn, id_of_synset: str, words: List[Tuple[str,
             if word[0] == synonym.literal and str(word[1]) == synonym.sense:
                 words_in_synset.append(word)
     return words_in_synset
-
-
-def get_vertex_label(word: Tuple[str, int, str]) -> str:
-    return '_'.join([str(part) for part in word][:2])
 
 
 if __name__ == '__main__':
