@@ -135,11 +135,11 @@ def create_binary_tf_idf_classifier() -> GridSearchCV:
         ('clf', LinearSVC())
     ])
     parameters = {
-        'tfidf__max_df': (0.25, 0.5, 0.75),
-        "clf__C": [0.01, 0.1, 1],
+        'tfidf__max_df': ([1 / 100] + list(x / 100 for x in range(5, 101, 5))),
+        "clf__C": [0.01, 0.1, 1, 10, 100],
         "clf__class_weight": ['balanced', None]
     }
-    return GridSearchCV(pipeline, parameters, n_jobs=-1)
+    return GridSearchCV(pipeline, parameters, n_jobs=4)
 
 
 if __name__ == '__main__':

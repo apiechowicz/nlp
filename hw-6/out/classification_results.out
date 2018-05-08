@@ -2,131 +2,175 @@ Classification results for group:	civil
 Using tagged data?					False
              precision    recall  f1-score   support
 
-      civil       0.88      0.70      0.78        20
-  non-civil       0.89      0.96      0.93        52
+      civil       0.98      0.99      0.98       456
+  non-civil       0.98      0.95      0.96       215
 
-avg / total       0.89      0.89      0.88        72
-	Micro		0.889		0.889		0.889
-	Macro		0.884		0.831		0.852
+avg / total       0.98      0.98      0.98       671
+	Micro		0.978		0.978		0.978
+	Macro		0.979		0.97		0.974
 ------------------------------------------------------------
 Classification results for group:	competition
 Using tagged data?					False
                  precision    recall  f1-score   support
 
-    competition       0.91      0.91      0.91        23
-non-competition       0.96      0.96      0.96        49
+    competition       0.50      0.67      0.57         3
+non-competition       1.00      1.00      1.00       668
 
-    avg / total       0.94      0.94      0.94        72
-	Micro		0.944		0.944		0.944
-	Macro		0.936		0.936		0.936
+    avg / total       1.00      1.00      1.00       671
+	Micro		0.996		0.996		0.996
+	Macro		0.749		0.832		0.785
 ------------------------------------------------------------
 Classification results for group:	criminal
 Using tagged data?					False
               precision    recall  f1-score   support
 
-    criminal       1.00      1.00      1.00        25
-non-criminal       1.00      1.00      1.00        47
+    criminal       0.96      0.92      0.94       100
+non-criminal       0.99      0.99      0.99       571
 
- avg / total       1.00      1.00      1.00        72
-	Micro		1.0		1.0		1.0
-	Macro		1.0		1.0		1.0
+ avg / total       0.98      0.98      0.98       671
+	Micro		0.982		0.982		0.982
+	Macro		0.972		0.956		0.964
 ------------------------------------------------------------
 Classification results for group:	economic
 Using tagged data?					False
               precision    recall  f1-score   support
 
     economic       0.00      0.00      0.00         2
-non-economic       0.97      1.00      0.99        70
+non-economic       1.00      1.00      1.00       669
 
- avg / total       0.95      0.97      0.96        72
-	Micro		0.972		0.972		0.972
-	Macro		0.486		0.5		0.493
+ avg / total       0.99      1.00      1.00       671
+	Micro		0.997		0.997		0.997
+	Macro		0.499		0.5		0.499
+------------------------------------------------------------
+Classification results for group:	family
+Using tagged data?					False
+             precision    recall  f1-score   support
+
+     family       1.00      1.00      1.00         2
+ non-family       1.00      1.00      1.00       669
+
+avg / total       1.00      1.00      1.00       671
+	Micro		1.0		1.0		1.0
+	Macro		1.0		1.0		1.0
 ------------------------------------------------------------
 Classification results for group:	insurance
 Using tagged data?					False
                precision    recall  f1-score   support
 
-    insurance       0.00      0.00      0.00         1
-non-insurance       0.99      1.00      0.99        71
+    insurance       0.00      0.00      0.00        18
+non-insurance       0.97      1.00      0.99       653
 
-  avg / total       0.97      0.99      0.98        72
-	Micro		0.986		0.986		0.986
-	Macro		0.493		0.5		0.497
+  avg / total       0.95      0.97      0.96       671
+	Micro		0.973		0.973		0.973
+	Macro		0.487		0.5		0.493
 ------------------------------------------------------------
 Classification results for group:	labor
 Using tagged data?					False
              precision    recall  f1-score   support
 
-      labor       0.00      0.00      0.00         1
-  non-labor       0.99      1.00      0.99        71
+      labor       0.94      0.60      0.74        83
+  non-labor       0.95      0.99      0.97       588
 
-avg / total       0.97      0.99      0.98        72
-	Micro		0.986		0.986		0.986
-	Macro		0.493		0.5		0.497
+avg / total       0.95      0.95      0.94       671
+	Micro		0.946		0.946		0.946
+	Macro		0.945		0.799		0.853
+------------------------------------------------------------
+Classification results for group:	offense
+Using tagged data?					False
+             precision    recall  f1-score   support
+
+non-offense       1.00      1.00      1.00       664
+    offense       0.83      0.71      0.77         7
+
+avg / total       1.00      1.00      1.00       671
+	Micro		0.996		0.996		0.996
+	Macro		0.915		0.856		0.883
 ------------------------------------------------------------
 Classification results for group:	civil
 Using tagged data?					True
              precision    recall  f1-score   support
 
-      civil       0.88      0.70      0.78        20
-  non-civil       0.89      0.96      0.93        52
+      civil       0.98      0.99      0.99       456
+  non-civil       0.98      0.96      0.97       215
 
-avg / total       0.89      0.89      0.88        72
-	Micro		0.889		0.889		0.889
-	Macro		0.884		0.831		0.852
+avg / total       0.98      0.98      0.98       671
+	Micro		0.981		0.981		0.981
+	Macro		0.979		0.976		0.978
 ------------------------------------------------------------
 Classification results for group:	competition
 Using tagged data?					True
                  precision    recall  f1-score   support
 
-    competition       0.91      0.91      0.91        23
-non-competition       0.96      0.96      0.96        49
+    competition       0.67      0.67      0.67         3
+non-competition       1.00      1.00      1.00       668
 
-    avg / total       0.94      0.94      0.94        72
-	Micro		0.944		0.944		0.944
-	Macro		0.936		0.936		0.936
+    avg / total       1.00      1.00      1.00       671
+	Micro		0.997		0.997		0.997
+	Macro		0.833		0.833		0.833
 ------------------------------------------------------------
 Classification results for group:	criminal
 Using tagged data?					True
               precision    recall  f1-score   support
 
-    criminal       1.00      1.00      1.00        25
-non-criminal       1.00      1.00      1.00        47
+    criminal       0.95      0.93      0.94       100
+non-criminal       0.99      0.99      0.99       571
 
- avg / total       1.00      1.00      1.00        72
-	Micro		1.0		1.0		1.0
-	Macro		1.0		1.0		1.0
+ avg / total       0.98      0.98      0.98       671
+	Micro		0.982		0.982		0.982
+	Macro		0.968		0.961		0.964
 ------------------------------------------------------------
 Classification results for group:	economic
 Using tagged data?					True
               precision    recall  f1-score   support
 
     economic       0.00      0.00      0.00         2
-non-economic       0.97      1.00      0.99        70
+non-economic       1.00      1.00      1.00       669
 
- avg / total       0.95      0.97      0.96        72
-	Micro		0.972		0.972		0.972
-	Macro		0.486		0.5		0.493
+ avg / total       0.99      1.00      0.99       671
+	Micro		0.996		0.996		0.996
+	Macro		0.499		0.499		0.499
+------------------------------------------------------------
+Classification results for group:	family
+Using tagged data?					True
+             precision    recall  f1-score   support
+
+     family       1.00      1.00      1.00         2
+ non-family       1.00      1.00      1.00       669
+
+avg / total       1.00      1.00      1.00       671
+	Micro		1.0		1.0		1.0
+	Macro		1.0		1.0		1.0
 ------------------------------------------------------------
 Classification results for group:	insurance
 Using tagged data?					True
                precision    recall  f1-score   support
 
-    insurance       1.00      1.00      1.00         1
-non-insurance       1.00      1.00      1.00        71
+    insurance       1.00      0.06      0.11        18
+non-insurance       0.97      1.00      0.99       653
 
-  avg / total       1.00      1.00      1.00        72
-	Micro		1.0		1.0		1.0
-	Macro		1.0		1.0		1.0
+  avg / total       0.98      0.97      0.96       671
+	Micro		0.975		0.975		0.975
+	Macro		0.987		0.528		0.546
 ------------------------------------------------------------
 Classification results for group:	labor
 Using tagged data?					True
              precision    recall  f1-score   support
 
-      labor       0.00      0.00      0.00         1
-  non-labor       0.99      1.00      0.99        71
+      labor       0.96      0.64      0.77        83
+  non-labor       0.95      1.00      0.97       588
 
-avg / total       0.97      0.99      0.98        72
-	Micro		0.986		0.986		0.986
-	Macro		0.493		0.5		0.497
+avg / total       0.95      0.95      0.95       671
+	Micro		0.952		0.952		0.952
+	Macro		0.957		0.818		0.871
+------------------------------------------------------------
+Classification results for group:	offense
+Using tagged data?					True
+             precision    recall  f1-score   support
+
+non-offense       1.00      1.00      1.00       664
+    offense       0.83      0.71      0.77         7
+
+avg / total       1.00      1.00      1.00       671
+	Micro		0.996		0.996		0.996
+	Macro		0.915		0.856		0.883
 ------------------------------------------------------------
