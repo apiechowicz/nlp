@@ -3,12 +3,12 @@ from os import getcwd
 from os.path import join, devnull
 from typing import List, Tuple, Dict
 
-from networkx import DiGraph
+from networkx import DiGraph, compose
 
 sys.path.insert(0, join(getcwd(), 'pywnxml'))  # needed so that imports work in downloaded repository
 from pywnxml.WNQuery import WNQuery
 from utils.argument_parser import parse_arguments
-from utils.file_utils import save_graph, save_data
+from utils.file_utils import save_data, save_graph
 
 
 def main():
@@ -16,7 +16,9 @@ def main():
     wn = WNQuery(wordnet_file_path, open(devnull, "w"))
     result = find_word(wn, 'szkoda', 'n')
     save_data(result, 'exercise-1-3.txt')
-    result = find_relation(wn, 'wypadek', 1, 'n', 'hyponym', 1)  # shouldn't it be 'Hipo_plWN-PWN' or maybe both?
+    graph, edge_labels = find_transitive_closure(wn, 'wypadek drogowy', 1, 'n', 'hypernym')
+    save_graph(graph, edge_labels, 'exercise-4.png')
+    result = find_relation(wn, 'wypadek', 1, 'n', 'hyponym', 1)
     save_data(result, 'exercise-5.txt')
     result2 = find_relation(wn, 'wypadek', 1, 'n', 'hyponym', 2)
     save_data(result2, 'exercise-6.txt')
@@ -53,8 +55,37 @@ def find_word(wn, word: str, word_type: str) -> str:
     return output
 
 
-def find_relation(wn, word: str, semnum: int, word_type: str, relation_name: str, relation_depth_level: int) -> str:
-    word_id = find_word_id(wn, word, semnum, word_type)
+def find_transitive_closure(wn, word: str, sense_level: int, word_type: str, relation_name: str) \
+        -> Tuple[DiGraph, Dict[Tuple[str, str], str]]:
+    synset = wn.lookUpSense(word, sense_level, word_type)
+    graph = DiGraph()
+    edge_labels = {}
+    u = get_vertex_label((word, sense_level, word_type))
+    graph.add_node(u)
+    for synset_id, relation in synset.ilrs:
+        if relation == relation_name:
+            synset_in_relation = wn.lookUpID(synset_id, synset_id[-1:])
+            for word_in_relation in synset_in_relation.synonyms:
+                word_in_relation_as_tuple = (word_in_relation.literal, int(word_in_relation.sense),
+                                             synset_in_relation.pos)
+                v = get_vertex_label(word_in_relation_as_tuple)
+                graph.add_node(v)
+                graph.add_edge(v, u)
+                edge_labels[(u, v)] = relation_name
+                sub_graph, sub_graph_edge_labels = find_transitive_closure(wn, *word_in_relation_as_tuple,
+                                                                           relation_name)
+                graph = compose(graph, sub_graph)
+                edge_labels = {**edge_labels, **sub_graph_edge_labels}
+    return graph, edge_labels
+
+
+def get_vertex_label(word: Tuple[str, int, str]) -> str:
+    return '_'.join([str(part) for part in word][:2])
+
+
+def find_relation(wn, word: str, sense_level: int, word_type: str, relation_name: str,
+                  relation_depth_level: int) -> str:
+    word_id = find_word_id(wn, word, sense_level, word_type)
     output = 'Words that are in relation {} (relation level: {}) with word {}:\n'.format(relation_name,
                                                                                          relation_depth_level, word)
     words = find_words_in_relation(wn, word_id, relation_name, relation_depth_level)
@@ -92,10 +123,6 @@ def create_relations_graph(wn, words: List[Tuple[str, int, str]]) -> Tuple[DiGra
         add_synonym_relations(synset, word, words, edge_labels, graph)
         find_and_add_relations(synset, synset_ids, wn, words, word, graph, edge_labels)
     return graph, edge_labels
-
-
-def get_vertex_label(word: Tuple[str, int, str]) -> str:
-    return '_'.join([str(part) for part in word][:2])
 
 
 def add_synonym_relations(synset, word, words, edge_labels, graph):
