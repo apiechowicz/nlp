@@ -1,11 +1,11 @@
 import sys
+from math import inf, log
 from os import getcwd
 from os.path import join, devnull
 from typing import List, Tuple, Dict
 
-from networkx import DiGraph, compose
-
 sys.path.insert(0, join(getcwd(), 'pywnxml'))  # needed so that imports work in downloaded repository
+from networkx import DiGraph, compose, dag_longest_path_length, shortest_path_length, NetworkXNoPath
 from pywnxml.WNQuery import WNQuery
 from utils.argument_parser import parse_arguments
 from utils.file_utils import save_data, save_graph
@@ -33,6 +33,15 @@ def main():
                ('katastrofa budowlana', 1, 'n'), ('wypadek drogowy', 1, 'n')]
     graph, edge_labels = create_relations_graph(wn, words_2)
     save_graph(graph, edge_labels, 'exercise-7-II.png')
+    wn = WNQuery(wordnet_file_path, open(devnull, "w"))  # somehow if WNQuery is not re-loaded similarity will be -inf
+    max_distance = find_max_distance(wn, 'n', 'hypernym')
+    result = measure_similarity(wn, ('szkoda', 2, 'n'), ('wypadek', 1, 'n'), 'hypernym', max_distance)
+    save_data(result, 'exercise-8-I.txt')
+    result = measure_similarity(wn, ('kolizja', 2, 'n'), ('szkoda majątkowa', 1, 'n'), 'hypernym', max_distance)
+    save_data(result, 'exercise-8-II.txt')
+    result = measure_similarity(wn, ('nieszczęście', 2, 'n'), ('katastrofa budowlana', 1, 'n'), 'hypernym',
+                                max_distance)
+    save_data(result, 'exercise-8-III.txt')
 
 
 def find_word(wn, word: str, word_type: str) -> str:
@@ -156,6 +165,33 @@ def get_words_in_synset_that_match(wn, id_of_synset: str, words: List[Tuple[str,
             if word[0] == synonym.literal and str(word[1]) == synonym.sense:
                 words_in_synset.append(word)
     return words_in_synset
+
+
+def find_max_distance(wn, pos: str, relation: str) -> int:
+    graph = DiGraph()
+    for synset_id, synset in wn.dat(pos).items():
+        graph.add_node(synset_id)
+        for id_of_synset_in_relation, relation_name in synset.ilrs:
+            if relation_name == relation:
+                graph.add_node(id_of_synset_in_relation)
+                graph.add_edge(id_of_synset_in_relation, synset.wnid)
+    return dag_longest_path_length(graph)
+
+
+def measure_similarity(wn, word1: Tuple[str, int, str], word2: Tuple[str, int, str], relation_name: str,
+                       max_distance: int) -> str:
+    graph1 = find_transitive_closure(wn, *word1, relation_name)[0]
+    graph2 = find_transitive_closure(wn, *word2, relation_name)[0]
+    graph = compose(graph1.to_undirected(), graph2.to_undirected())
+    u = get_vertex_label(word1)
+    v = get_vertex_label(word2)
+    try:
+        distance = shortest_path_length(graph, u, v)
+    except NetworkXNoPath:
+        distance = inf
+    similarity = (-1.0) * log(distance / (2.0 * max_distance))
+    return 'Leacock-Chodorow similiarity measure between {} and {} is {}. (distance: {}, max_distance: {})' \
+        .format(u, v, similarity, distance, max_distance)
 
 
 if __name__ == '__main__':
