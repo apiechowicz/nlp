@@ -6,8 +6,8 @@ from requests import post, get
 from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
-from utils.file_utils import extract_judgements_from_given_year_from_file, get_json_as_string, read_data, \
-    get_files_to_be_processed, save_data
+from utils.file_utils import extract_judgements_from_given_year_from_file, get_json_as_string, \
+    get_files_to_be_processed, save_data, read_data, save_task_results, read_task_results
 from utils.regex_utils import replace_redundant_characters
 
 ENCODING = r'utf-8'
@@ -15,7 +15,7 @@ API_PATH = r'http://ws.clarin-pl.eu/nlprest2/base'
 HEADERS = {'content-type': 'application/json', 'charset': '{}'.format(ENCODING)}
 START_TASK_PATH = API_PATH + r'/startTask'
 GET_STATUS_PATH = API_PATH + r'/getStatus/{}'
-GET_FILE_PATH = API_PATH + r'/download/{}'
+GET_FILE_PATH = API_PATH + r'/download'
 
 
 def main():
@@ -30,6 +30,9 @@ def main():
     task_ids = read_data('tasks.txt')
     task_map = create_task_map(task_ids)
     task_map = wait_for_tasks_to_complete(task_map)
+    task_map = {task_id: get_result(task_map[task_id]) for task_id in task_map.keys()}
+    save_task_results(task_map)
+    task_results = read_task_results()
 
 
 def extract_judgements(files, judgement_year):
@@ -55,17 +58,18 @@ def create_ner_task(judgement: str) -> str:
     return response.content.decode(ENCODING)
 
 
-def create_task_map(task_ids: List[str]) -> Dict[str, Dict[str, str]]:
+def create_task_map(task_ids: List[str]) -> Dict:
     tasks_with_status = {task_id: get_task_status(task_id) for task_id in task_ids}
     return tasks_with_status
 
 
-def get_task_status(task_id: str) -> Dict[str, str]:
+def get_task_status(task_id: str) -> List[Dict[str, str]]:
     response = get(url=GET_STATUS_PATH.format(task_id))
     return loads(response.content.decode(ENCODING))
 
 
-def wait_for_tasks_to_complete(task_map: Dict[str, Dict[str, str]]) -> Dict[str, Dict[str, str]]:
+def wait_for_tasks_to_complete(task_map: Dict) -> Dict:
+    print('Waiting for tasks to complete...')
     not_completed = [task_id for task_id in task_map.keys() if not is_completed(task_map, task_id)]
     while len(not_completed) > 0:
         now_completed = []
@@ -79,8 +83,14 @@ def wait_for_tasks_to_complete(task_map: Dict[str, Dict[str, str]]) -> Dict[str,
     return task_map
 
 
-def is_completed(task_map: Dict[str, Dict[str, str]], task_id: str) -> bool:
+def is_completed(task_map: Dict, task_id: str) -> bool:
     return task_map[task_id]['status'] == 'DONE'
+
+
+def get_result(status: Dict) -> str:
+    file_path = status['value'][0]['fileID']
+    response = get(url=GET_FILE_PATH + file_path)
+    return response.content.decode(ENCODING)
 
 
 if __name__ == '__main__':

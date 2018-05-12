@@ -8,6 +8,8 @@ from utils.regex_utils import is_valid_input_file, judgement_year_matches
 OUTPUT_DIRECTORY_NAME = r'out'
 OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
 JSONS_DIRECTORY = r'jsons'
+TASKS_DIRECTORY_PATH = join(OUTPUT_DIRECTORY_PATH, r'task-results')
+TASK_RESULTS_EXTENSION = r'.txt'
 
 
 def get_files_to_be_processed(input_dir: str) -> List[str]:
@@ -54,3 +56,21 @@ def get_json_as_string(file_name: str) -> str:
 def __read_json_file_to_string(file_path: str) -> str:
     with open(file_path, 'r') as file:
         return file.read().replace('\n', '')
+
+
+def save_task_results(task_map: Dict[str, str]) -> None:
+    for task_id in task_map.keys():
+        with open(__get_task_result_filename(task_id), 'w') as file:
+            file.write(task_map[task_id])
+
+
+def __get_task_result_filename(task_id: str) -> str:
+    return join(TASKS_DIRECTORY_PATH, task_id + TASK_RESULTS_EXTENSION)
+
+
+def read_task_results() -> List[str]:
+    results = []
+    for file_name in listdir(TASKS_DIRECTORY_PATH):
+        with open(join(TASKS_DIRECTORY_PATH, file_name)) as file:
+            results.append(file.read())
+    return results
