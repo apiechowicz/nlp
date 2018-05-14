@@ -37,6 +37,8 @@ def main():
     task_results = read_task_results()
     category_map = create_category_map(task_results)
     super_category_map = create_super_category_map(category_map)
+    category_map_cardinality = calculate_category_cardinality(category_map)
+    super_category_map_cardinality = calculate_category_cardinality(super_category_map)
 
 
 def extract_judgements(files, judgement_year):
@@ -148,6 +150,16 @@ def create_super_category_map(category_map: Dict[str, Dict[str, int]]) -> Dict[s
             else:
                 super_category_map[super_category][word] += category_map[category][word]
     return super_category_map
+
+
+def calculate_category_cardinality(category_map: Dict[str, Dict[str, int]]) -> Dict[str, int]:
+    category_cardinality = {}
+    for category in category_map:
+        cardinality = 0
+        for word in category_map[category].keys():
+            cardinality += category_map[category][word]
+        category_cardinality[category] = cardinality
+    return category_cardinality
 
 
 if __name__ == '__main__':
