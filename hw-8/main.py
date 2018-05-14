@@ -1,13 +1,15 @@
+from _elementtree import Element
 from json import loads
 from time import sleep, time
 from typing import List, Dict
+from xml.etree import ElementTree as etree
 
 from requests import post, get
 from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import extract_judgements_from_given_year_from_file, get_json_as_string, \
-    get_files_to_be_processed, save_data, read_data, save_task_results, read_task_results
+    read_task_results
 from utils.regex_utils import replace_redundant_characters
 
 ENCODING = r'utf-8'
@@ -33,6 +35,7 @@ def main():
     task_map = {task_id: get_result(task_map[task_id]) for task_id in task_map.keys()}
     save_task_results(task_map)
     task_results = read_task_results()
+    occurrence_map = create_occurrences_map(task_results)
 
 
 def extract_judgements(files, judgement_year):
@@ -94,6 +97,42 @@ def get_result(status: Dict) -> str:
     file_path = status['value'][0]['fileID']
     response = get(url=GET_FILE_PATH + file_path)
     return response.content.decode(ENCODING)
+
+
+def create_occurrences_map(task_results: List[str]) -> Dict[str, Dict[str, int]]:
+    occurrence_map = {}
+    for xml in task_results:
+        chunk_list = etree.fromstring(xml)
+        for chunk in chunk_list:
+            for sentence in chunk:
+                for token in sentence:
+                    if token.tag == 'tok':
+                        parse_token(token, occurrence_map)
+    return occurrence_map
+
+
+def parse_token(token: Element, occurrence_map: Dict[str, Dict[str, int]]) -> None:
+    word = ''
+    categories = []
+    for child in token:
+        if child.tag == 'orth':
+            # todo should I use tok.orth or rather tok.lex.base?
+            word = child.text
+        elif child.tag == 'ann':
+            # todo what does the number inside the tag mean?
+            categories.append(child.get('chan'))
+    if word != '' and len(categories) > 0:
+        update_occurrence_map(occurrence_map, categories, word)
+
+
+def update_occurrence_map(occurrence_map: Dict[str, Dict[str, int]], categories: List[str], word: str) -> None:
+    for category in categories:
+        if category not in occurrence_map:
+            occurrence_map[category] = {}
+        if word not in occurrence_map[category]:
+            occurrence_map[category][word] = 1
+        else:
+            occurrence_map[category][word] += 1
 
 
 if __name__ == '__main__':
