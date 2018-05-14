@@ -35,7 +35,8 @@ def main():
     task_map = {task_id: get_result(task_map[task_id]) for task_id in task_map.keys()}
     save_task_results(task_map)
     task_results = read_task_results()
-    occurrence_map = create_occurrences_map(task_results)
+    category_map = create_category_map(task_results)
+    super_category_map = create_super_category_map(category_map)
 
 
 def extract_judgements(files, judgement_year):
@@ -99,19 +100,19 @@ def get_result(status: Dict) -> str:
     return response.content.decode(ENCODING)
 
 
-def create_occurrences_map(task_results: List[str]) -> Dict[str, Dict[str, int]]:
-    occurrence_map = {}
+def create_category_map(task_results: List[str]) -> Dict[str, Dict[str, int]]:
+    category_map = {}
     for xml in task_results:
         chunk_list = etree.fromstring(xml)
         for chunk in chunk_list:
             for sentence in chunk:
                 for token in sentence:
                     if token.tag == 'tok':
-                        parse_token(token, occurrence_map)
-    return occurrence_map
+                        parse_token(token, category_map)
+    return category_map
 
 
-def parse_token(token: Element, occurrence_map: Dict[str, Dict[str, int]]) -> None:
+def parse_token(token: Element, category_map: Dict[str, Dict[str, int]]) -> None:
     word = ''
     categories = []
     for child in token:
@@ -122,17 +123,31 @@ def parse_token(token: Element, occurrence_map: Dict[str, Dict[str, int]]) -> No
             # todo what does the number inside the tag mean?
             categories.append(child.get('chan'))
     if word != '' and len(categories) > 0:
-        update_occurrence_map(occurrence_map, categories, word)
+        update_category_map(category_map, categories, word)
 
 
-def update_occurrence_map(occurrence_map: Dict[str, Dict[str, int]], categories: List[str], word: str) -> None:
+def update_category_map(category_map: Dict[str, Dict[str, int]], categories: List[str], word: str) -> None:
     for category in categories:
-        if category not in occurrence_map:
-            occurrence_map[category] = {}
-        if word not in occurrence_map[category]:
-            occurrence_map[category][word] = 1
+        if category not in category_map:
+            category_map[category] = {}
+        if word not in category_map[category]:
+            category_map[category][word] = 1
         else:
-            occurrence_map[category][word] += 1
+            category_map[category][word] += 1
+
+
+def create_super_category_map(category_map: Dict[str, Dict[str, int]]) -> Dict[str, Dict[str, int]]:
+    super_category_map = {}
+    for category in category_map.keys():
+        super_category = '_'.join(category.split('_')[:2])
+        if super_category not in super_category_map:
+            super_category_map[super_category] = {}
+        for word in category_map[category].keys():
+            if word not in super_category_map[super_category]:
+                super_category_map[super_category][word] = category_map[category][word]
+            else:
+                super_category_map[super_category][word] += category_map[category][word]
+    return super_category_map
 
 
 if __name__ == '__main__':
