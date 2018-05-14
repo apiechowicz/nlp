@@ -17,7 +17,7 @@ def replace_redundant_characters(content: str) -> str:
     content = replace_non_space_white_characters(content)
     content = replace_html_tags(content)
     content = replace_punctuation_marks(content)
-    content = replace_digits(content)
+    # content = replace_digits(content)
     content = replace_multiple_white_characters(content)
     return content
 

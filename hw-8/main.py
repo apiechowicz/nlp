@@ -1,5 +1,5 @@
 from json import loads
-from time import sleep
+from time import sleep, time
 from typing import List, Dict
 
 from requests import post, get
@@ -71,7 +71,9 @@ def get_task_status(task_id: str) -> List[Dict[str, str]]:
 def wait_for_tasks_to_complete(task_map: Dict) -> Dict:
     print('Waiting for tasks to complete...')
     not_completed = [task_id for task_id in task_map.keys() if not is_completed(task_map, task_id)]
+    start = time()
     while len(not_completed) > 0:
+        print('Tasks left: ' + str(len(not_completed)))
         now_completed = []
         for task_id in not_completed:
             task_map[task_id] = get_task_status(task_id)
@@ -80,6 +82,7 @@ def wait_for_tasks_to_complete(task_map: Dict) -> Dict:
             sleep(3)
         for completed in now_completed:
             not_completed.remove(completed)
+    print('Waiting took: {}s'.format(round(time() - start, 2)))
     return task_map
 
 

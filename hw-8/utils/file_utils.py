@@ -30,13 +30,13 @@ def extract_judgements_from_given_year_from_file(file: str, year: int) -> List[D
 
 
 def save_data(judgements: List[str], file_name: str) -> None:
-    create_output_dir(OUTPUT_DIRECTORY_PATH)
+    create_dir(OUTPUT_DIRECTORY_PATH)
     with open(join(OUTPUT_DIRECTORY_PATH, file_name), 'w') as file:
         for judgement in judgements:
             file.write(judgement + '\n')
 
 
-def create_output_dir(path: str) -> None:
+def create_dir(path: str) -> None:
     if not isdir(path):
         makedirs(path)
 
@@ -69,6 +69,7 @@ def __get_task_result_filename(task_id: str) -> str:
 
 
 def read_task_results() -> List[str]:
+    create_dir(TASKS_DIRECTORY_PATH)
     results = []
     for file_name in listdir(TASKS_DIRECTORY_PATH):
         with open(join(TASKS_DIRECTORY_PATH, file_name)) as file:
