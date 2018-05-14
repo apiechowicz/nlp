@@ -2,7 +2,7 @@ from _elementtree import Element
 from json import loads
 from os.path import join
 from time import sleep, time
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from xml.etree import ElementTree as etree
 
 from matplotlib import pyplot
@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import extract_judgements_from_given_year_from_file, get_json_as_string, \
-    read_task_results, create_dir, OUTPUT_DIRECTORY_PATH, get_files_to_be_processed, save_data, read_data, \
+    read_task_results, create_dir, OUTPUT_DIRECTORY_PATH, save_data, get_files_to_be_processed, read_data, \
     save_task_results
 from utils.regex_utils import replace_redundant_characters
 
@@ -42,6 +42,12 @@ def main():
     super_category_map = create_super_category_map(category_map)
     plot_cardinality(calculate_category_cardinality(category_map), 'exercise-6-I.png')
     plot_cardinality(calculate_category_cardinality(super_category_map), 'exercise-6-II.png')
+    top_in_categories = find_top_k_in_categories(category_map, 100)
+    top_in_categories = convert_top_in_categories_to_list(top_in_categories, 100)
+    save_data(top_in_categories, 'exercise-7.txt')
+    top_in_super_categories = find_top_k_in_categories(super_category_map, 10)
+    top_in_super_categories = convert_top_in_super_categories_to_list(top_in_super_categories)
+    save_data(top_in_super_categories, 'exercise-8.txt')
 
 
 def extract_judgements(files, judgement_year):
@@ -181,6 +187,34 @@ def plot_cardinality(cardinality_map: Dict[str, int], filename: str) -> None:
     pyplot.grid(True)
     pyplot.savefig(output_file)
     pyplot.close()
+
+
+def find_top_k_in_categories(category_map: Dict[str, Dict[str, int]], k: int) -> Dict[str, List[Tuple[str, int]]]:
+    category_top_words_map = {}
+    for category in category_map.keys():
+        words_in_category = []
+        for word in category_map[category].keys():
+            words_in_category.append((word, category_map[category][word]))
+        words_in_category = sorted(words_in_category, key=lambda pair: pair[1], reverse=True)
+        category_top_words_map[category] = words_in_category[:k] if len(words_in_category) > k else words_in_category
+    return category_top_words_map
+
+
+def convert_top_in_categories_to_list(top_in_categories: Dict[str, List[Tuple[str, int]]], k: int) -> List[str]:
+    top_words = []
+    for category, items in top_in_categories.items():
+        top_words.extend((word, occurrences, category) for word, occurrences in items)
+    top_words = sorted(top_words, key=lambda word: word[1], reverse=True)
+    top_words = top_words[:k] if len(top_words) > k else top_words
+    return ['{}\t{}\t{}'.format(word, occurrences, category) for word, occurrences, category in top_words]
+
+
+def convert_top_in_super_categories_to_list(top_in_super_categories: Dict[str, List[Tuple[str, int]]]) -> List[str]:
+    words = []
+    for category, items in top_in_super_categories.items():
+        words.append(category + ':')
+        words.extend(['{}\t{}'.format(word, occurrences) for word, occurrences in items])
+    return words
 
 
 if __name__ == '__main__':
