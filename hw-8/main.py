@@ -1,15 +1,18 @@
 from _elementtree import Element
 from json import loads
+from os.path import join
 from time import sleep, time
 from typing import List, Dict
 from xml.etree import ElementTree as etree
 
+from matplotlib import pyplot
 from requests import post, get
 from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import extract_judgements_from_given_year_from_file, get_json_as_string, \
-    read_task_results
+    read_task_results, create_dir, OUTPUT_DIRECTORY_PATH, get_files_to_be_processed, save_data, read_data, \
+    save_task_results
 from utils.regex_utils import replace_redundant_characters
 
 ENCODING = r'utf-8'
@@ -37,8 +40,8 @@ def main():
     task_results = read_task_results()
     category_map = create_category_map(task_results)
     super_category_map = create_super_category_map(category_map)
-    category_map_cardinality = calculate_category_cardinality(category_map)
-    super_category_map_cardinality = calculate_category_cardinality(super_category_map)
+    plot_cardinality(calculate_category_cardinality(category_map), 'exercise-6-I.png')
+    plot_cardinality(calculate_category_cardinality(super_category_map), 'exercise-6-II.png')
 
 
 def extract_judgements(files, judgement_year):
@@ -160,6 +163,24 @@ def calculate_category_cardinality(category_map: Dict[str, Dict[str, int]]) -> D
             cardinality += category_map[category][word]
         category_cardinality[category] = cardinality
     return category_cardinality
+
+
+def plot_cardinality(cardinality_map: Dict[str, int], filename: str) -> None:
+    create_dir(OUTPUT_DIRECTORY_PATH)
+    output_file = join(OUTPUT_DIRECTORY_PATH, filename)
+    categories = ['_'.join(category.split('_')[1:]) for category in cardinality_map.keys()]
+    cardinalities = cardinality_map.values()
+    pyplot.figure(figsize=(12, 9), dpi=100, tight_layout=True)
+    pyplot.xticks(rotation='vertical')
+    pyplot.yscale('log')
+    pyplot.bar(categories, cardinalities)
+    pyplot.tight_layout()
+    pyplot.title('Cardinality of categories')
+    pyplot.xlabel('Categories')
+    pyplot.ylabel('Cardinality [log]')
+    pyplot.grid(True)
+    pyplot.savefig(output_file)
+    pyplot.close()
 
 
 if __name__ == '__main__':
