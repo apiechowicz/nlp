@@ -79,7 +79,7 @@ def wait_for_tasks_to_complete(task_map: Dict) -> Dict:
             task_map[task_id] = get_task_status(task_id)
             if is_completed(task_map, task_id):
                 now_completed.append(task_id)
-            sleep(3)
+            sleep(1)
         for completed in now_completed:
             not_completed.remove(completed)
     print('Waiting took: {}s'.format(round(time() - start, 2)))

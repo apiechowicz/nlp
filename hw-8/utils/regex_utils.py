@@ -35,7 +35,7 @@ def replace_html_tags(content: str) -> str:
 
 
 def replace_punctuation_marks(content: str) -> str:
-    content = sub('[§,.;:\-–−()\[\]"\'„…”/]', "", content)
+    content = sub('[§;:()\[\]"\'„…”/]', '', content)
     return content
 
 

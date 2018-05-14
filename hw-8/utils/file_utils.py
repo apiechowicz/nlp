@@ -9,7 +9,7 @@ OUTPUT_DIRECTORY_NAME = r'out'
 OUTPUT_DIRECTORY_PATH = join(getcwd(), OUTPUT_DIRECTORY_NAME)
 JSONS_DIRECTORY = r'jsons'
 TASKS_DIRECTORY_PATH = join(OUTPUT_DIRECTORY_PATH, r'task-results')
-TASK_RESULTS_EXTENSION = r'.txt'
+TASK_RESULTS_EXTENSION = r'.xml'
 
 
 def get_files_to_be_processed(input_dir: str) -> List[str]:
@@ -59,6 +59,7 @@ def __read_json_file_to_string(file_path: str) -> str:
 
 
 def save_task_results(task_map: Dict[str, str]) -> None:
+    create_dir(TASKS_DIRECTORY_PATH)
     for task_id in task_map.keys():
         with open(__get_task_result_filename(task_id), 'w') as file:
             file.write(task_map[task_id])
