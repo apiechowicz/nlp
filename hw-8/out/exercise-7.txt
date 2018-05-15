@@ -1,100 +1,100 @@
-.	7325	nam_org_institution
-,	4404	nam_org_institution
-.	3588	nam_liv_person
-w	2744	nam_org_institution
-,	2230	nam_liv_person
-.	2183	nam_org_company
-z	1884	nam_org_institution
-.	1818	nam_pro_media_periodic
-.	1750	nam_loc_gpe_city
-.	1618	nam_pro_title_document
-w	1395	nam_liv_person
-.	1262	nam_oth_currency
-,	1087	nam_org_company
-.	1040	nam_org_organization
-na	1039	nam_org_institution
-i	1016	nam_org_institution
-,	999	nam_loc_gpe_city
-r	968	nam_org_institution
-o	944	nam_org_institution
-.	911	nam_fac_road
-art	901	nam_org_institution
-z	886	nam_liv_person
-,	849	nam_org_organization
-do	843	nam_org_institution
-.	753	nam_num_house
-Sąd	743	nam_org_institution
-,	725	nam_pro_title_document
-,	698	nam_oth_currency
-w	637	nam_loc_gpe_city
-w	624	nam_org_company
-,	619	nam_pro_media_periodic
-dnia	614	nam_org_institution
-przez	606	nam_org_institution
-z	588	nam_org_company
-o	581	nam_liv_person
-1	580	nam_org_institution
-o	578	nam_org_company
-i	573	nam_liv_person
-że	565	nam_org_institution
-nie	533	nam_org_institution
-,	518	nam_fac_road
-na	504	nam_liv_person
-Sądu	494	nam_org_institution
-w	489	nam_org_organization
-z	477	nam_loc_gpe_city
-,	468	nam_num_house
-z	447	nam_pro_media_periodic
-k	439	nam_org_institution
-z	409	nam_pro_title_document
-r	402	nam_liv_person
-w	378	nam_pro_title_document
-w	373	nam_oth_currency
-p	371	nam_org_institution
-przez	368	nam_liv_person
-2	366	nam_org_institution
-art	363	nam_pro_title_document
-do	363	nam_liv_person
-z	353	nam_org_organization
-od	346	nam_org_institution
-o	340	nam_loc_gpe_city
-w	339	nam_pro_media_periodic
-się	322	nam_org_institution
-oraz	315	nam_org_institution
-W	314	nam_org_institution
-art	311	nam_liv_person
-ust	301	nam_org_institution
-z	291	nam_oth_currency
-r	285	nam_pro_media_periodic
-a	276	nam_org_institution
-,	275	nam_pro_brand
-1	275	nam_liv_person
-i	271	nam_org_company
-na	271	nam_org_company
-zł	266	nam_oth_currency
-art	264	nam_pro_media_periodic
-c	261	nam_org_institution
-sprawie	258	nam_org_institution
-na	257	nam_loc_gpe_city
-.	255	nam_pro_brand
-U	240	nam_pro_media_periodic
-Dz	239	nam_pro_media_periodic
-dnia	239	nam_liv_person
-.	238	nam_fac_goe
-jest	237	nam_org_institution
-za	229	nam_org_institution
-z	228	nam_fac_road
-ustawy	228	nam_org_institution
-Najwyższy	224	nam_org_institution
-przez	222	nam_org_company
-2009	219	nam_org_institution
-3	219	nam_org_institution
-o	218	nam_pro_title_document
-pracy	217	nam_org_institution
-i	216	nam_loc_gpe_city
-.	215	nam_org_group_team
-na	215	nam_oth_currency
-i	215	nam_org_organization
-postępowania	214	nam_org_institution
-o	211	nam_oth_currency
-o	210	nam_fac_road
+.	223	nam_pro_media_periodic
+Sąd Najwyższy	197	nam_org_institution
+zł	149	nam_oth_currency
+Sądu Najwyższego	140	nam_org_institution
+Sąd Okręgowy	106	nam_org_institution
+Sąd Apelacyjny	102	nam_org_institution
+.	98	nam_org_company
+Sądu Okręgowego	90	nam_org_institution
+Zamawiającego	80	nam_liv_person
+Trybunał Konstytucyjny	68	nam_org_institution
+Urzędu Zamówień Publicznych	67	nam_org_institution
+Sąd Rejonowy	61	nam_org_institution
+Zamawiający	60	nam_liv_person
+Prawo zamówień publicznych	53	nam_pro_title_document
+Najwyższy	53	nam_liv_person
+.	44	nam_liv_person
+Warszawie	43	nam_loc_gpe_city
+Sądu Apelacyjnego	42	nam_org_institution
+OTK ZU	40	nam_org_organization
+Warszawa	40	nam_loc_gpe_city
+Prezesa Urzędu Zamówień Publicznych	36	nam_org_institution
+Trybunału Konstytucyjnego	34	nam_org_institution
+TK	30	nam_org_institution
+Odwołującego	28	nam_liv_person
+Członkowie	27	nam_org_nation
+Izbie Cywilnej	24	nam_org_institution
+IMIENIU RZECZYPOSPOLITEJ POLSKIEJ Dnia	24	nam_org_institution
+Prezesa Rady Ministrów	22	nam_org_institution
+Ubezpieczeń Społecznych i Spraw Publicznych	19	nam_org_institution
+Najwyższego	19	nam_liv_person
+Fundusz Pracy	18	nam_org_institution
+Ministra Sprawiedliwości	18	nam_org_institution
+OK Medical Systems	16	nam_org_organization
+Fundusz Gwarantowanych Świadczeń Pracowniczych	16	nam_org_organization
+Fujitsu Technology Solutions	16	nam_org_company
+Prezes Urzędu	15	nam_org_institution
+Sądu Rejonowego	15	nam_org_institution
+Krajowa Izba Odwoławcza	15	nam_org_institution
+Mirosława Wysocka	15	nam_liv_person
+Odwołujący	15	nam_liv_person
+Krzysztof Pietrzykowski	15	nam_liv_person
+SSN	15	nam_org_political_party
+Skarżący	14	nam_liv_person
+Teresa BielskaSobkowicz	14	nam_liv_person
+Trybunale Konstytucyjnym	13	nam_org_institution
+Kodeks postępowania cywilnego	12	nam_pro_title_document
+Sądowi Apelacyjnemu	12	nam_org_institution
+VII	12	nam_org_company
+Jacek Ochnio	12	nam_liv_person
+Radosława CiołekPoniatowskiego	12	nam_liv_person
+Krajowej Izby Odwoławczej	11	nam_org_institution
+VAT	11	nam_oth_other
+Funduszu Ubezpieczeń Społecznych	10	nam_org_institution
+Prezesa Urzędu	10	nam_org_institution
+Kraków	10	nam_loc_gpe_city
+Jacka Ochnio	10	nam_liv_person
+Przystępującego	10	nam_liv_person
+ustawy o emeryturach	9	nam_pro_title_document
+Sądu Okręgowego Sądu Pracy i Ubezpieczeń Społecznych	9	nam_org_institution
+Microsoft	9	nam_org_company
+Profile Poznań	9	nam_org_group_team
+Poznaniu	9	nam_loc_gpe_city
+Herbert Szurgacz	9	nam_liv_person
+PLN	8	nam_org_organization
+Prawo o ustroju sądów powszechnych	8	nam_pro_title_document
+Kodeks postępowania karnego	8	nam_pro_title_document
+Urzędowi Zamówień Publicznych	8	nam_org_institution
+Skarb Państwa	8	nam_org_institution
+Microsoft Enterprise	8	nam_org_company
+Poznań	8	nam_loc_gpe_city
+Jana Pawła II	8	nam_liv_person
+Radosław CiołekPoniatowski	8	nam_liv_person
+XXX	7	nam_org_organization
+Unii Europejskiej	7	nam_org_organization
+Agencja Rozwoju Lokalnego	7	nam_org_institution
+Sąd	7	nam_org_institution
+BHP	7	nam_org_company
+Jerzy Kwaśniewski	7	nam_liv_person
+Marek Sychowicz	7	nam_liv_person
+Barbara Myszka	7	nam_liv_person
+Izba	7	nam_liv_person
+Lecznicza	7	nam_fac_road
+Filtrowa	7	nam_fac_road
+Świętokrzyska	7	nam_fac_road
+Poleczki	7	nam_fac_road
+3	7	nam_num_house
+Związku Zawodowego Pracowników Samorządowych	6	nam_org_organization
+Sądowi Najwyższemu	6	nam_org_institution
+Zakład Ubezpieczeń Społecznych	6	nam_org_institution
+Biuletynie Zamówień Publicznych	6	nam_org_institution
+Dzienniku Urzędowym	6	nam_pro_media_periodic
+Gospodarstwo Ogrodnicze	6	nam_org_company
+Izby	6	nam_loc_gpe_city
+Jerozolimskie	6	nam_loc_gpe_admin1
+1	6	nam_num_house
+Robót Drogowych	5	nam_org_organization
+Specyfikacji Istotnych Warunków Zamówienia	5	nam_org_institution
+Sąd Ochrony Konkurencji i Konsumentów	5	nam_org_institution
+Sądowi Okręgowemu	5	nam_org_institution
+Skarbu Państwa	5	nam_org_institution

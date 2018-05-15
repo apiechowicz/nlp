@@ -1,99 +1,86 @@
-nam_pro:
-.	3792
-,	1713
-z	991
-w	818
-art	652
-r	561
-o	471
-U	383
-i	378
-Dz	377
-nam_liv:
-.	3604
-,	2239
-w	1399
-z	889
-o	583
-i	577
-na	506
-r	403
-przez	371
-do	365
-nam_eve:
-.	48
-,	36
-w	27
-o	10
-z	9
-na	7
-i	6
-brutto	6
-do	6
-PLN	6
-nam_org:
-.	10811
-,	6455
-w	3932
-z	2881
-o	1768
-i	1547
-na	1540
-r	1353
-do	1122
-art	1041
-nam_adj:
-.	37
-,	35
-w	24
-o	10
-i	9
-na	8
-z	8
-że	7
-osób	5
-r	5
-nam_loc:
-.	1979
-,	1139
-w	721
-z	538
-o	382
-na	286
-i	249
-r	205
-ul	197
-przez	184
-nam_oth:
-.	1382
-,	812
-w	439
-z	320
-zł	273
-na	239
-o	227
-i	178
-1	134
-przez	119
 nam_num:
-.	753
-,	468
-z	206
-o	191
-w	177
-ul	172
-przez	109
-na	101
-Sp	77
-Warszawa	72
+3	7
+1	6
+4244	5
+40	5
+23	4
+7	4
+2	3
+4	2
+6367	2
+148150	2
+nam_loc:
+Warszawie	43
+Warszawa	40
+Kraków	10
+Poznaniu	9
+Poznań	8
+Jerozolimskie	6
+Izby	6
+Krakowie	5
+Bobrowiec	5
+Włodowice	5
+nam_adj:
+europejskiego	2
+niemieckiej	1
+czeska	1
+internetowych	1
+nam_pro:
+.	223
+Prawo zamówień publicznych	53
+Kodeks postępowania cywilnego	12
+ustawy o emeryturach	9
+Prawo o ustroju sądów powszechnych	8
+Kodeks postępowania karnego	8
+Dzienniku Urzędowym	6
+Kodeksu cywilnego	4
+Konwencji Genewskiej	4
+ustawy o służbie cywilnej z 2006	4
+nam_oth:
+zł	149
+VAT	15
+euro	3
+złotych	3
+Internet	2
+C	2
+EUR	2
+WAN	1
+PLN	1
+nam_liv:
+Zamawiającego	80
+Zamawiający	60
+Najwyższy	53
+.	44
+Odwołującego	28
+Najwyższego	19
+Mirosława Wysocka	15
+Odwołujący	15
+Krzysztof Pietrzykowski	15
+Skarżący	14
+nam_eve:
+Puławsko ParchackoBochotnickiej	1
+Małopolskiego Regionalnego Programu Operacyjnego	1
+Euro pejskiej	1
+Pakiecie Socjalnym	1
 nam_fac:
-.	1170
-,	667
-w	336
-z	293
-o	255
-ul	219
-na	157
-przez	148
-i	117
-Sp	96
+Lecznicza	7
+Świętokrzyska	7
+Filtrowa	7
+Poleczki	7
+Reja	5
+Serwituty	5
+Puławska	5
+Prosta	5
+Julianowska	5
+Traktorowa	5
+nam_org:
+Sąd Najwyższy	198
+Sądu Najwyższego	140
+Sąd Okręgowy	106
+Sąd Apelacyjny	102
+.	101
+Sądu Okręgowego	90
+Trybunał Konstytucyjny	68
+Urzędu Zamówień Publicznych	67
+Sąd Rejonowy	61
+Sądu Apelacyjnego	42
