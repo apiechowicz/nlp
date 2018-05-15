@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import extract_judgements_from_given_year_from_file, get_json_as_string, \
-    read_task_results, create_dir, OUTPUT_DIRECTORY_PATH, save_data, get_files_to_be_processed, read_data, \
+    read_task_results, create_dir, OUTPUT_DIRECTORY_PATH, get_files_to_be_processed, save_data, read_data, \
     save_task_results
 from utils.regex_utils import replace_redundant_characters
 
@@ -117,34 +117,67 @@ def create_category_map(task_results: List[str]) -> Dict[str, Dict[str, int]]:
         chunk_list = etree.fromstring(xml)
         for chunk in chunk_list:
             for sentence in chunk:
-                for token in sentence:
-                    if token.tag == 'tok':
-                        parse_token(token, category_map)
+                parse_sentence(sentence, category_map)
     return category_map
 
 
-def parse_token(token: Element, category_map: Dict[str, Dict[str, int]]) -> None:
-    word = ''
-    categories = []
-    for child in token:
-        if child.tag == 'orth':
-            # todo should I use tok.orth or rather tok.lex.base?
-            word = child.text
-        elif child.tag == 'ann':
-            # todo what does the number inside the tag mean?
-            categories.append(child.get('chan'))
-    if word != '' and len(categories) > 0:
-        update_category_map(category_map, categories, word)
+def parse_sentence(sentence: Element, category_map: Dict[str, Dict[str, int]]) -> None:
+    tokens = [token for token in sentence]
+    for i in range(0, len(tokens)):
+        token = tokens[i]
+        if is_token(token):
+            for ann_tag in get_ann_tags(token):
+                if int(ann_tag.text) > 0:
+                    phrase_words = [get_token_text(token)]
+                    j = 1
+                    next_token = get_next_token_or_none(i, j, tokens)
+                    if next_token is None:
+                        update_category_map(category_map, ann_tag.attrib['chan'], get_token_text(token))
+                    while is_token(next_token):
+                        corresponding_ann_tag = get_corresponding_ann_tag(next_token, ann_tag)
+                        if corresponding_ann_tag is not None:
+                            phrase_words.append(get_token_text(next_token))
+                            next_token.remove(corresponding_ann_tag)
+                        else:
+                            update_category_map(category_map, ann_tag.attrib['chan'], ' '.join(phrase_words))
+                            break
+                        j += 1
+                        next_token = get_next_token_or_none(i, j, tokens)
+                        if next_token is None:
+                            update_category_map(category_map, ann_tag.attrib['chan'], ' '.join(phrase_words))
 
 
-def update_category_map(category_map: Dict[str, Dict[str, int]], categories: List[str], word: str) -> None:
-    for category in categories:
-        if category not in category_map:
-            category_map[category] = {}
-        if word not in category_map[category]:
-            category_map[category][word] = 1
-        else:
-            category_map[category][word] += 1
+def is_token(token: Element):
+    return token is not None and token.tag == 'tok'
+
+
+def get_ann_tags(token: Element) -> List[Element]:
+    return [child for child in token if child.tag == 'ann']
+
+
+def get_token_text(token):
+    return token[0].text
+
+
+def get_next_token_or_none(i, j, tokens) -> Element or None:
+    return tokens[i + j] if i + j < len(tokens) else None
+
+
+def update_category_map(category_map: Dict[str, Dict[str, int]], category: str, phrase: str) -> None:
+    if category not in category_map:
+        category_map[category] = {}
+    if phrase not in category_map[category]:
+        category_map[category][phrase] = 1
+    else:
+        category_map[category][phrase] += 1
+
+
+def get_corresponding_ann_tag(next_token: Element, ann_tag: Element) -> Element or None:
+    next_token_ann_tags = get_ann_tags(next_token)
+    for tag in next_token_ann_tags:
+        if tag.attrib['chan'] == ann_tag.attrib['chan'] and tag.text == ann_tag.text:
+            return tag
+    return None
 
 
 def create_super_category_map(category_map: Dict[str, Dict[str, int]]) -> Dict[str, Dict[str, int]]:
