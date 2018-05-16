@@ -1,0 +1,86 @@
+nam_num:
+3	7
+1	6
+4244	5
+40	5
+23	4
+7	4
+2	3
+4	2
+6367	2
+148150	2
+nam_loc:
+Warszawie	43
+Warszawa	40
+Kraków	10
+Poznaniu	9
+Poznań	8
+Jerozolimskie	6
+Izby	6
+Krakowie	5
+Bobrowiec	5
+Włodowice	5
+nam_adj:
+europejskiego	2
+niemieckiej	1
+czeska	1
+internetowych	1
+nam_pro:
+.	223
+Prawo zamówień publicznych	53
+Kodeks postępowania cywilnego	12
+ustawy o emeryturach	9
+Prawo o ustroju sądów powszechnych	8
+Kodeks postępowania karnego	8
+Dzienniku Urzędowym	6
+Kodeksu cywilnego	4
+Konwencji Genewskiej	4
+ustawy o służbie cywilnej z 2006	4
+nam_oth:
+zł	149
+VAT	15
+euro	3
+złotych	3
+Internet	2
+C	2
+EUR	2
+WAN	1
+PLN	1
+nam_liv:
+Zamawiającego	80
+Zamawiający	60
+Najwyższy	53
+.	44
+Odwołującego	28
+Najwyższego	19
+Mirosława Wysocka	15
+Odwołujący	15
+Krzysztof Pietrzykowski	15
+Skarżący	14
+nam_eve:
+Puławsko ParchackoBochotnickiej	1
+Małopolskiego Regionalnego Programu Operacyjnego	1
+Euro pejskiej	1
+Pakiecie Socjalnym	1
+nam_fac:
+Lecznicza	7
+Świętokrzyska	7
+Filtrowa	7
+Poleczki	7
+Reja	5
+Serwituty	5
+Puławska	5
+Prosta	5
+Julianowska	5
+Traktorowa	5
+nam_org:
+Sąd Najwyższy	198
+Sądu Najwyższego	140
+Sąd Okręgowy	106
+Sąd Apelacyjny	102
+.	101
+Sądu Okręgowego	90
+Trybunał Konstytucyjny	68
+Urzędu Zamówień Publicznych	67
+Sąd Rejonowy	61
+Sądu Apelacyjnego	42
