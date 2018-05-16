@@ -28,9 +28,9 @@ def extract_judgements_from_file(file: str) -> List[Dict[str, str]]:
         return judgements
 
 
-def save_data(judgements: List[str], file_name: str) -> None:
-    create_dir(OUTPUT_DIRECTORY_PATH)
-    with open(join(OUTPUT_DIRECTORY_PATH, file_name), 'w') as file:
+def save_data(directory_path: str, judgements: List[str], file_name: str) -> None:
+    create_dir(directory_path)
+    with open(join(directory_path, file_name), 'w') as file:
         for judgement in judgements:
             file.write(judgement + '\n')
 
@@ -40,9 +40,16 @@ def create_dir(path: str) -> None:
         makedirs(path)
 
 
-def read_data(file_name: str) -> List[str]:
+def read_data_in_directory(directory_path: str) -> List[str]:
+    all_judgements = []
+    for file_name in listdir(directory_path):
+        all_judgements.extend(read_data(directory_path, file_name))
+    return all_judgements
+
+
+def read_data(directory_path: str, file_name: str) -> List[str]:
     judgements = []
-    with open(join(OUTPUT_DIRECTORY_PATH, file_name), 'r') as file:
+    with open(join(directory_path, file_name), 'r') as file:
         for line in file:
             judgements.append(line.rstrip())
     return judgements
