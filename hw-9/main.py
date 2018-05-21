@@ -1,14 +1,15 @@
+from gc import collect
 from os import listdir
-from os.path import getsize, basename
+from os.path import getsize, basename, join
 from typing import List
 
-from gensim.models import Phrases
+from gensim.models import Phrases, Word2Vec
 from gensim.models.phrases import Phraser
 from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
 from utils.file_utils import get_files_to_be_processed, extract_judgements_from_file, save_data, \
-    PREPROCESSED_DATA_DIRECTORY_PATH, read_data_in_directory, save_trigrams, read_data, TRIGRAMS_DATA_DIRECTORY_PATH
+    PREPROCESSED_DATA_DIRECTORY_PATH, read_data, TRIGRAMS_DATA_DIRECTORY_PATH, OUTPUT_DIRECTORY_PATH
 from utils.regex_utils import replace_redundant_characters, extract_sentences
 
 BYTES_IN_MEGABYTE = 1024 * 1024
@@ -21,6 +22,9 @@ def main():
     preprocessed_files = preprocess_judgements(files)
     trigram_files = convert_to_trigram_sentences(preprocessed_files)
     # trigram_files = convert_to_trigram_sentences(listdir(PREPROCESSED_DATA_DIRECTORY_PATH))
+    model = create_model(trigram_files)
+    # model = create_model(listdir(TRIGRAMS_DATA_DIRECTORY_PATH))
+    model.save(join(OUTPUT_DIRECTORY_PATH, 'trigrams.model'))
 
 
 def preprocess_judgements(files: List[str]) -> List[str]:
@@ -75,6 +79,19 @@ def convert_to_sentences_stream(judgements):
 
 def convert_to_stream(sentence: str) -> List[str]:
     return sentence.lower().replace('.', '').replace(',', '').split(' ')
+
+
+def create_model(trigram_files: List[str]):
+    sentences = []
+    for file_name in tqdm(trigram_files, unit='trigram files'):
+        trigram_sentences = read_data(TRIGRAMS_DATA_DIRECTORY_PATH, file_name)
+        for sentence in trigram_sentences:
+            sentences.append(sentence.split(' '))
+        collect()
+    print('Training started')
+    model = Word2Vec(sentences, sg=0, window=5, size=300, min_count=3, workers=4)
+    print('Training finished')
+    return model
 
 
 if __name__ == '__main__':
