@@ -1,2 +1,5 @@
 tqdm
 gensim
+sklearn
+matplotlib
+numpy

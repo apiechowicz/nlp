@@ -1,15 +1,19 @@
 from gc import collect
 from os import listdir
 from os.path import getsize, basename, join
-from typing import List
+from typing import List, Tuple
 
 from gensim.models import Phrases, Word2Vec
 from gensim.models.phrases import Phraser
+from matplotlib import pyplot
+from numpy.random import rand
+from sklearn.manifold import TSNE
 from tqdm import tqdm
 
 from utils.argument_parser import parse_arguments
-from utils.file_utils import get_files_to_be_processed, extract_judgements_from_file, save_data, \
-    PREPROCESSED_DATA_DIRECTORY_PATH, read_data, TRIGRAMS_DATA_DIRECTORY_PATH, OUTPUT_DIRECTORY_PATH
+from utils.file_utils import extract_judgements_from_file, save_data, \
+    PREPROCESSED_DATA_DIRECTORY_PATH, read_data, TRIGRAMS_DATA_DIRECTORY_PATH, OUTPUT_DIRECTORY_PATH, \
+    get_files_to_be_processed
 from utils.regex_utils import replace_redundant_characters, extract_sentences
 
 BYTES_IN_MEGABYTE = 1024 * 1024
@@ -21,9 +25,9 @@ def main():
     files = select_random_files(files, minimum_data_size)
     preprocessed_files = preprocess_judgements(files)
     trigram_files = convert_to_trigram_sentences(preprocessed_files)
-    # trigram_files = convert_to_trigram_sentences(listdir(PREPROCESSED_DATA_DIRECTORY_PATH))
+    trigram_files = convert_to_trigram_sentences(listdir(PREPROCESSED_DATA_DIRECTORY_PATH))
     model = create_model(trigram_files)
-    # model = create_model(listdir(TRIGRAMS_DATA_DIRECTORY_PATH))
+    model = create_model(listdir(TRIGRAMS_DATA_DIRECTORY_PATH))
     model.save(join(OUTPUT_DIRECTORY_PATH, 'trigrams.model'))
     model = Word2Vec.load(join(OUTPUT_DIRECTORY_PATH, 'trigrams.model'))
     results = find_n_most_similar(model, 3,
@@ -34,6 +38,8 @@ def main():
                                                                  ('pasażer', 'mężczyzna', 'kobieta'),
                                                                  ('samochód', 'droga', 'rzeka')])
     save_data(OUTPUT_DIRECTORY_PATH, results, 'exercise-8.txt')
+    plot_tsne_fitting_results(model, ['szkoda', 'strata', 'uszczerbek', 'szkoda majątkowa', 'uszczerbek na zdrowiu',
+                                      'krzywda', 'niesprawiedliwość', 'nieszczęście'], 'exercise-9.png')
 
 
 def preprocess_judgements(files: List[str]) -> List[str]:
@@ -114,7 +120,7 @@ def find_n_most_similar(model: Word2Vec, top_n: int, words: List[str]) -> List[s
     return results
 
 
-def convert_to_compatible_with_word2vec(word: str)-> str:
+def convert_to_compatible_with_word2vec(word: str) -> str:
     return word.lower().replace(' ', '_')
 
 
@@ -140,6 +146,22 @@ def calculate_operation_result(model: Word2Vec, first_word: str, second_word: st
     return model[convert_to_compatible_with_word2vec(first_word)] \
            - model[convert_to_compatible_with_word2vec(second_word)] \
            + model[convert_to_compatible_with_word2vec(third_word)]
+
+
+def plot_tsne_fitting_results(model: Word2Vec, words: List[str], file_name: str):
+    vectors = [model[convert_to_compatible_with_word2vec(word)] for word in words]
+    fitting_results = TSNE().fit_transform(vectors)
+    x = fitting_results[:, 0]
+    y = fitting_results[:, 1]
+    colors = rand(len(fitting_results))
+    pyplot.figure(figsize=(12, 9), dpi=100)
+    pyplot.title('t-SNE visualization of word2vec vectors')
+    pyplot.scatter(x, y, s=50, c=colors)
+    for i in range(len(fitting_results)):
+        pyplot.annotate(words[i], xy=(x[i], y[i]))
+    pyplot.grid(True)
+    pyplot.savefig(join(OUTPUT_DIRECTORY_PATH, file_name))
+    pyplot.close()
 
 
 if __name__ == '__main__':
