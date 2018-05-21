@@ -30,6 +30,10 @@ def main():
                                   ['Sąd Najwyższy', 'Trybunał Konstytucyjny', 'kodeks cywilny', 'kpk', 'sąd rejonowy',
                                    'szkoda', 'wypadek', 'kolizja', 'szkoda majątkowa', 'nieszczęście', 'rozwód'])
     save_data(OUTPUT_DIRECTORY_PATH, results, 'exercise-7.txt')
+    results = find_n_most_similar_to_operation_result(model, 5, [('Sąd Najwyższy', 'kpc', 'konstytucja'),
+                                                                 ('pasażer', 'mężczyzna', 'kobieta'),
+                                                                 ('samochód', 'droga', 'rzeka')])
+    save_data(OUTPUT_DIRECTORY_PATH, results, 'exercise-8.txt')
 
 
 def preprocess_judgements(files: List[str]) -> List[str]:
@@ -102,12 +106,40 @@ def create_model(trigram_files: List[str]):
 def find_n_most_similar(model: Word2Vec, top_n: int, words: List[str]) -> List[str]:
     results = []
     for word in words:
-        most_similar = model.wv.most_similar(positive=word.lower().replace(' ', '_'), topn=top_n)
+        most_similar = model.wv.most_similar(positive=convert_to_compatible_with_word2vec(word), topn=top_n)
         result = '{} most similar words to word {} are:\n'.format(top_n, word)
         result += '\n'.join(['{} - similarity: {}'.format(result_word, round(similarity, 4))
                              for result_word, similarity in most_similar])
         results.append(result)
     return results
+
+
+def convert_to_compatible_with_word2vec(word: str)-> str:
+    return word.lower().replace(' ', '_')
+
+
+def find_n_most_similar_to_operation_result(model: Word2Vec, top_n: int, operands_list: List[Tuple[str, str, str]]) \
+        -> List[str]:
+    """
+    :param operands_list: list of operands, each of them is tuple of 3 words for which we will calculate:
+    first word - second + third
+    """
+    results = []
+    for operands in operands_list:
+        vector = calculate_operation_result(model, *operands)
+        most_similar = model.wv.similar_by_vector(vector=vector, topn=top_n)
+        result = '{} most similar words to result of operation: "{} - {} + {}" are:\n' \
+            .format(top_n, *operands)
+        result += '\n'.join(['{} - similarity: {}'.format(result_word, round(similarity, 4))
+                             for result_word, similarity in most_similar])
+        results.append(result)
+    return results
+
+
+def calculate_operation_result(model: Word2Vec, first_word: str, second_word: str, third_word: str):
+    return model[convert_to_compatible_with_word2vec(first_word)] \
+           - model[convert_to_compatible_with_word2vec(second_word)] \
+           + model[convert_to_compatible_with_word2vec(third_word)]
 
 
 if __name__ == '__main__':
