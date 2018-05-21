@@ -1,0 +1,44 @@
+3 most similar words to word Sąd Najwyższy are:
+trybunał_konstytucyjny - similarity: 0.7768
+trybunał - similarity: 0.7705
+naczelny_sąd_administracyjny - similarity: 0.6999
+3 most similar words to word Trybunał Konstytucyjny are:
+trybunał - similarity: 0.9367
+sąd_najwyższy - similarity: 0.7768
+prokurator_generalny - similarity: 0.7567
+3 most similar words to word kodeks cywilny are:
+kodeks_karny - similarity: 0.7314
+kodeks_postępowania_cywilnego - similarity: 0.7286
+kodeks - similarity: 0.6945
+3 most similar words to word kpk are:
+2_kpk - similarity: 0.8933
+1_kpk - similarity: 0.8886
+3_kpk - similarity: 0.8239
+3 most similar words to word sąd rejonowy are:
+sąd_okręgowy - similarity: 0.876
+sąd_i_instancji - similarity: 0.8497
+sąd_pierwszej_instancji - similarity: 0.8425
+3 most similar words to word szkoda are:
+krzywda - similarity: 0.7247
+szkodę - similarity: 0.6248
+wysokość_szkody - similarity: 0.6223
+3 most similar words to word wypadek are:
+przypadek - similarity: 0.6488
+uraz - similarity: 0.5536
+incydent - similarity: 0.5467
+3 most similar words to word kolizja are:
+usterka - similarity: 0.6782
+wyrwa - similarity: 0.6679
+kłótnia - similarity: 0.6436
+3 most similar words to word szkoda majątkowa are:
+rozgraniczać - similarity: 0.5165
+wymierna - similarity: 0.4998
+że_szkoda - similarity: 0.4997
+3 most similar words to word nieszczęście are:
+zabarwienie - similarity: 0.5811
+nadzieje - similarity: 0.5805
+ataki - similarity: 0.571
+3 most similar words to word rozwód are:
+separację - similarity: 0.7141
+przez_rozwód - similarity: 0.6497
+małżeństwo - similarity: 0.5906

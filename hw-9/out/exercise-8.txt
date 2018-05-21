@@ -1,0 +1,18 @@
+5 most similar words to result of operation: "Sąd Najwyższy - kpc + konstytucja" are:
+sąd_najwyższy - similarity: 0.6167
+trybunał_konstytucyjny - similarity: 0.5404
+trybunał - similarity: 0.5381
+sn - similarity: 0.5088
+marszałek_sejmu - similarity: 0.4813
+5 most similar words to result of operation: "pasażer - mężczyzna + kobieta" are:
+pasażerka - similarity: 0.5873
+pielęgniarka - similarity: 0.4842
+poszkodowana - similarity: 0.4729
+kierująca - similarity: 0.4626
+pasażer - similarity: 0.4609
+5 most similar words to result of operation: "samochód - droga + rzeka" are:
+samochód - similarity: 0.7207
+pojazd - similarity: 0.6366
+telefon_komórkowy - similarity: 0.5597
+ciągnik - similarity: 0.5561
+rower - similarity: 0.5538
