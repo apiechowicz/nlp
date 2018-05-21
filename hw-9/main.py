@@ -25,6 +25,11 @@ def main():
     model = create_model(trigram_files)
     # model = create_model(listdir(TRIGRAMS_DATA_DIRECTORY_PATH))
     model.save(join(OUTPUT_DIRECTORY_PATH, 'trigrams.model'))
+    model = Word2Vec.load(join(OUTPUT_DIRECTORY_PATH, 'trigrams.model'))
+    results = find_n_most_similar(model, 3,
+                                  ['Sąd Najwyższy', 'Trybunał Konstytucyjny', 'kodeks cywilny', 'kpk', 'sąd rejonowy',
+                                   'szkoda', 'wypadek', 'kolizja', 'szkoda majątkowa', 'nieszczęście', 'rozwód'])
+    save_data(OUTPUT_DIRECTORY_PATH, results, 'exercise-7.txt')
 
 
 def preprocess_judgements(files: List[str]) -> List[str]:
@@ -92,6 +97,17 @@ def create_model(trigram_files: List[str]):
     model = Word2Vec(sentences, sg=0, window=5, size=300, min_count=3, workers=4)
     print('Training finished')
     return model
+
+
+def find_n_most_similar(model: Word2Vec, top_n: int, words: List[str]) -> List[str]:
+    results = []
+    for word in words:
+        most_similar = model.wv.most_similar(positive=word.lower().replace(' ', '_'), topn=top_n)
+        result = '{} most similar words to word {} are:\n'.format(top_n, word)
+        result += '\n'.join(['{} - similarity: {}'.format(result_word, round(similarity, 4))
+                             for result_word, similarity in most_similar])
+        results.append(result)
+    return results
 
 
 if __name__ == '__main__':
